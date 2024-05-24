@@ -10,5 +10,7 @@
         <item name="colorOnSurface">@color/blue</item>
         <item name="colorContainer">@color/blue</item>
         <item name="android:statusBarColor" >@color/blue</item>
+        <item name="rippleColor">@color/transparent</item>
+        <item name="selectableItemBackground">@color/transparent</item>
     </style>
 </resources>

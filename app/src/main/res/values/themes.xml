@@ -11,6 +11,8 @@
     </style>
 
 
-
+    <style name="NoRippleEffect">
+        <item name="android:selectableItemBackground">@android:color/transparent</item>
+    </style>
     <style name="Theme.Ims" parent="Base.Theme.Ims" />
 </resources>

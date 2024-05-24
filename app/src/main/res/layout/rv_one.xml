@@ -100,6 +100,8 @@
             android:id="@+id/p_name"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:textColor="@color/black"
+
             android:layout_weight="3.5"
             android:paddingHorizontal="8sp"
             android:layout_gravity="center_vertical"
@@ -119,6 +121,7 @@
 
         <ImageButton
             android:id="@+id/delete"
+            android:textColor="@color/black"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"

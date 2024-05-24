@@ -26,14 +26,15 @@
 
     <ListView
         android:id="@+id/list_view"
-        style="@style/Widget.AppCompat.ListView"
         android:layout_width="match_parent"
+        style="@style/NoRippleEffect"
         android:layout_height="300dp"
         android:layout_marginTop="25dp"
         android:nestedScrollingEnabled="false"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         tools:layout_editor_absoluteX="-3dp"
         tools:listitem="1"
+        android:background="@drawable/ripple"
         tools:ignore="NestedScrolling" />
 
     <TextView
