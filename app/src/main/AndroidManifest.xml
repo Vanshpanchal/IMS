@@ -16,9 +16,6 @@
             android:name=".Signin_act"
             android:exported="false" />
         <activity
-            android:name=".singin_act"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity

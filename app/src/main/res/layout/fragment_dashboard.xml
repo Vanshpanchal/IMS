@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".dashboard">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
+        android:layout_marginVertical="15dp"
         android:paddingHorizontal="15dp"
         android:text="@string/sales_activity"
         android:textColor="@color/black"
@@ -24,21 +28,23 @@
         android:id="@+id/list_view"
         style="@style/Widget.AppCompat.ListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
         android:layout_marginTop="25dp"
+        android:nestedScrollingEnabled="false"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         tools:layout_editor_absoluteX="-3dp"
-        tools:listitem="1" />
+        tools:listitem="1"
+        tools:ignore="NestedScrolling" />
 
     <TextView
         android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
         android:paddingHorizontal="15dp"
         android:text="@string/inventory_summary"
         android:textColor="@color/black"
         android:textSize="24sp"
-        android:layout_marginTop="22dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/list_view" />
@@ -46,72 +52,178 @@
     <LinearLayout
         android:id="@+id/inv_1"
         android:layout_width="match_parent"
-        android:layout_marginHorizontal="8dp"
         android:layout_height="wrap_content"
-        android:weightSum="2"
+        android:layout_marginHorizontal="8dp"
         android:layout_marginTop="15dp"
+        android:weightSum="2"
         app:layout_constraintTop_toBottomOf="@+id/textView1"
         tools:layout_editor_absoluteX="16dp">
 
         <TextView
             android:layout_width="0dp"
-            android:paddingVertical="10dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="In Hand"
             android:background="@drawable/bg_1"
-            android:textColor="@color/black"
             android:paddingHorizontal="8dp"
+            android:paddingVertical="10dp"
+            android:text="In Hand"
+            android:textColor="@color/black"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="@+id/textView2"/>
+            app:layout_constraintEnd_toEndOf="@+id/textView2" />
+
         <TextView
             android:id="@+id/in_hand"
             android:layout_width="0dp"
-            android:paddingVertical="10dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="500"
             android:background="@drawable/bg_2"
-            android:textColor="@color/black"
             android:paddingHorizontal="15dp"
+            android:paddingVertical="10dp"
+            android:text="500"
+            android:textColor="@color/black"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="@+id/textView2"/>
+            app:layout_constraintEnd_toEndOf="@+id/textView2" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/inv_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="2"
-        android:layout_marginTop="5dp"
         android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="5dp"
+        android:weightSum="2"
         app:layout_constraintTop_toBottomOf="@+id/inv_1"
         tools:layout_editor_absoluteX="16dp">
 
         <TextView
             android:layout_width="0dp"
-            android:paddingVertical="10dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="To be received"
-            android:textColor="@color/black"
             android:background="@drawable/bg_1"
             android:paddingHorizontal="8dp"
+            android:paddingVertical="10dp"
+            android:text="To be received"
+            android:textColor="@color/black"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="@+id/textView2"/>
+            app:layout_constraintEnd_toEndOf="@+id/textView2" />
+
         <TextView
             android:id="@+id/to_be_received"
             android:layout_width="0dp"
-            android:paddingVertical="10dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="500"
-            android:textColor="@color/black"
             android:background="@drawable/bg_2"
             android:paddingHorizontal="15dp"
+            android:paddingVertical="10dp"
+            android:text="500"
+            android:textColor="@color/black"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="@+id/textView2"/>
+            app:layout_constraintEnd_toEndOf="@+id/textView2" />
     </LinearLayout>
+
+<!--    <com.google.android.material.divider.MaterialDivider-->
+<!--        android:id="@+id/div_one"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="1.5dp"-->
+<!--        android:layout_marginHorizontal="15dp"-->
+<!--        android:layout_marginTop="15dp"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/textView3"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/inv_2" />-->
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="15dp"
+        android:text="@string/product_details"
+        android:layout_marginTop="25dp"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inv_2" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="5"
+        android:paddingHorizontal="15dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/low_stock_items"
+                android:textSize="18sp"
+                android:paddingVertical="5dp"
+                android:textColor="@color/red"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/all_item_groups"
+                android:textSize="18sp"
+                android:paddingVertical="5dp"
+                android:textColor="@color/black"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/all_items"
+                android:textSize="18sp"
+                android:paddingVertical="5dp"
+                android:textColor="@color/black"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingHorizontal="15dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:layout_gravity="center"
+                android:textSize="18sp"
+                android:paddingVertical="5dp"
+                android:textColor="@color/red"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:paddingVertical="5dp"
+                android:textColor="@color/black"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5"
+                android:layout_gravity="center"
+                android:textSize="18sp"
+                android:paddingVertical="5dp"
+                android:textColor="@color/black"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
     <!--    <LinearLayout-->
     <!--        android:id="@+id/linearLayout"-->
     <!--        android:layout_width="match_parent"-->
@@ -167,5 +279,5 @@
     <!--        app:layout_constraintEnd_toEndOf="parent"-->
     <!--        app:layout_constraintStart_toStartOf="parent"-->
     <!--        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />-->
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

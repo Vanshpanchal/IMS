@@ -87,6 +87,7 @@
         android:textAllCaps="true"
         android:textSize="22sp"
         app:cornerRadius="8sp"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />

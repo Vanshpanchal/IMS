@@ -34,4 +34,9 @@
     <string name="pharse_1">Simplify Your Inventory: Keep track of your stock with ease and efficiency.</string>
     <string name="forgot_password">Forgot password</string>
     <string name="terms_and_condition">Terms and Condition</string>
+    <string name="product_details">Product Details</string>
+    <string name="low_stock_items">Low Stock Items</string>
+    <string name="all_item_groups">All Item Groups</string>
+    <string name="all_items">All Items</string>
+    <string name="settings">Settings</string>
 </resources>
