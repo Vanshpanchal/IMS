@@ -33,6 +33,9 @@ class MainActivity : AppCompatActivity() {
                 R.id.item_2 -> {
                     replacefragement(inventory())
                 }
+                R.id.item_3 -> {
+                    replacefragement(product())
+                }
             }
             true
         }
