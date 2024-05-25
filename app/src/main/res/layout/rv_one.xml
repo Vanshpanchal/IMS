@@ -141,7 +141,7 @@
             android:layout_weight="1"
             android:background="#00000000"
             android:contentDescription="@string/todo"
-            android:src="@drawable/arrow_forward_ios_24px" />
+            android:src="@drawable/edit_24px" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

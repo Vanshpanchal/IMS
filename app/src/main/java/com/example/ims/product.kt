@@ -1,15 +1,23 @@
 package com.example.ims
 
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ims.databinding.FragmentDashboardBinding
 import com.example.ims.databinding.FragmentProductBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.dialog.MaterialDialogs
+import com.google.android.material.divider.MaterialDivider
+import com.google.android.material.textfield.TextInputEditText
 import kotlin.math.log
 
 
@@ -33,11 +41,11 @@ class product : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         val items = listOf(
-            product_list("Product 1", "4500/-"),
-            product_list("Product 2", "2000/-"),
-            product_list("Product 3", "1200/-"),
-            product_list("Product 4", "1000000/-"),
-            product_list("Product 5", "90000000/-"),
+            product_list("Product 1", "4500/-","200"),
+            product_list("Product 2", "2000/-","120"),
+            product_list("Product 3", "1200/-","14"),
+            product_list("Product 4", "1000000/-","20"),
+            product_list("Product 5", "90000000/-","8"),
         )
 
         previewDialog = BottomSheetDialog(requireContext())
@@ -55,6 +63,9 @@ class product : Fragment() {
                 previewDialog.setCancelable(true)
                 previewDialog.setCanceledOnTouchOutside(true)
 
+                view.findViewById<TextView>(R.id.product_name).text = items[position].title
+                view.findViewById<TextView>(R.id.product_unit).text = items[position].quantity
+                view.findViewById<TextView>(R.id.product_price).text = items[position].price
             }
 
         })
@@ -62,9 +73,43 @@ class product : Fragment() {
         productAdapter.ondelete(object : product_adapter.onitemclick {
             override fun itemClickListener(position: Int) {
                 Log.d("hello", "delete itemClickListener: ${position}")
+                MaterialAlertDialogBuilder(
+                    requireContext()
+                )
+                    .setTitle("Product Delete")
+                    .setIcon(R.drawable.delete_24px)
+                    .setMessage("You want to delete ${items[position].title}?")
+                    .setPositiveButton("Yes") { dialog, which ->
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton("No") { dialog, which ->
+                        dialog.dismiss()
+                    }
+                    .show();
 
             }
+        })
 
+        productAdapter.onedit(object : product_adapter.onitemclick {
+            override fun itemClickListener(position: Int) {
+                val view = LayoutInflater.from(requireActivity())
+                    .inflate(R.layout.edit_dialog, null, false)
+                val dialog = MaterialAlertDialogBuilder(
+                    requireContext()
+                )
+                    .setView(view)
+                    .create()
+                view.findViewById<TextInputEditText>(R.id.p_price).text =Editable.Factory.getInstance().newEditable(items[position].price)
+                view.findViewById<TextInputEditText>(R.id.p_name).text =Editable.Factory.getInstance().newEditable(items[position].title)
+                view.findViewById<TextInputEditText>(R.id.p_qty).text =Editable.Factory.getInstance().newEditable(items[position].quantity)
+
+
+                view.findViewById<Button>(R.id.submit_btn).setOnClickListener {
+                    Log.d("hello", "itemClickListener: ${view.findViewById<TextInputEditText>(R.id.p_price).text} ")
+                }
+
+                dialog.show()
+            }
         })
     }
 }

@@ -1,3 +1,3 @@
 package com.example.ims
 
-data class product_list(val title: String, val price: String)
+data class product_list(val title: String, val price: String, val quantity : String)
