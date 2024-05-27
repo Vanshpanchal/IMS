@@ -15,11 +15,6 @@
         android:icon="@drawable/product"
         android:title="@string/products"/>
     <item
-        android:id="@+id/item_4"
-        android:enabled="true"
-        android:icon="@drawable/sale"
-        android:title="@string/sales"/>
-    <item
         android:id="@+id/item_5"
         android:enabled="true"
         android:icon="@drawable/settings_24px"

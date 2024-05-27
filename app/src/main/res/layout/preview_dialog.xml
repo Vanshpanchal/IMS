@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:padding="8sp"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:padding="8sp">
 
 
     <View
@@ -61,10 +61,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/bg_4"
-            android:textColor="@color/black"
             android:padding="8sp"
             android:paddingStart="10dp"
             android:text="Product 1"
+            android:textColor="@color/black"
             android:textSize="16sp" />
     </LinearLayout>
 
@@ -88,31 +88,31 @@
             android:background="@drawable/bg_5"
             android:padding="8sp"
             android:paddingStart="10dp"
-            android:text="Product Price"
+            android:text="Inventory Name"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/product_price"
+            android:id="@+id/inv_name"
             android:layout_width="0dp"
-            android:textColor="@color/black"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/bg_4"
             android:padding="8sp"
             android:paddingStart="10dp"
             android:text="1500/-"
+            android:textColor="@color/black"
             android:textSize="16sp" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
-        android:textColor="@color/black"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="8sp"
         android:orientation="horizontal"
         android:padding="2dp"
+        android:textColor="@color/black"
         android:weightSum="2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -137,8 +137,119 @@
             android:background="@drawable/bg_4"
             android:padding="8sp"
             android:paddingStart="10dp"
-            android:textColor="@color/black"
             android:text="210"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8sp"
+        android:orientation="horizontal"
+        android:padding="2dp"
+        android:textColor="@color/black"
+        android:weightSum="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_5"
+            android:padding="8sp"
+            android:paddingStart="10dp"
+            android:text="@string/owner_name"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/owner_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_4"
+            android:padding="8sp"
+            android:paddingStart="10dp"
+            android:text="210"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8sp"
+        android:orientation="horizontal"
+        android:padding="2dp"
+        android:textColor="@color/black"
+        android:weightSum="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_5"
+            android:padding="8sp"
+            android:paddingStart="10dp"
+            android:text="@string/in_stock"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/in_stock"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_4"
+            android:padding="8sp"
+            android:paddingStart="10dp"
+            android:text="YES"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8sp"
+        android:orientation="horizontal"
+        android:padding="2dp"
+        android:textColor="@color/black"
+        android:weightSum="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout6">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_5"
+            android:padding="8sp"
+            android:paddingStart="10dp"
+            android:text="Product ID"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/product_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_4"
+            android:padding="8sp"
+            android:paddingStart="10dp"
+            android:text="210"
+            android:textColor="@color/black"
             android:textSize="16sp" />
     </LinearLayout>
 

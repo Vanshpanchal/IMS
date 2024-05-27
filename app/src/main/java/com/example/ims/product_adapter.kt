@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 class product_adapter(private val items: List<product_list>) :
     RecyclerView.Adapter<product_adapter.ProductViewHolder>() {
     lateinit var mylistener: onitemclick
-    lateinit var deletelistener: onitemclick
-    lateinit var editlistener: onitemclick
+//    lateinit var deletelistener: onitemclick
+//    lateinit var editlistener: onitemclick
 
 
     interface onitemclick {
@@ -22,35 +22,27 @@ class product_adapter(private val items: List<product_list>) :
         mylistener = listener
     }
 
-    fun ondelete(delListener: onitemclick) {
-        deletelistener = delListener
-    }
+//    fun ondelete(delListener: onitemclick) {
+//        deletelistener = delListener
+//    }
 
-    fun onedit(editListener: onitemclick) {
-        editlistener = editListener
-    }
+//    fun onedit(editListener: onitemclick) {
+//        editlistener = editListener
+//    }
 
     class ProductViewHolder(
         view: View,
-        listener: onitemclick,
-        deletelistener: onitemclick,
-        editlistener: onitemclick
+        listener: onitemclick
     ) :
         RecyclerView.ViewHolder(view) {
         val product_title: TextView = view.findViewById(R.id.p_name)
-        val product_price: TextView = view.findViewById(R.id.p_price)
+        val inventory_name: TextView = view.findViewById(R.id.inventory_name)
+        val quantity_left : TextView = view.findViewById(R.id.qty_remaining)
         val product_no: TextView = view.findViewById(R.id.p_no)
-        val del: ImageButton = view.findViewById(R.id.delete)
 
         init {
             view.setOnClickListener {
                 listener.itemClickListener(adapterPosition)
-            }
-            view.findViewById<ImageButton>(R.id.delete).setOnClickListener {
-                deletelistener.itemClickListener(adapterPosition)
-            }
-            view.findViewById<ImageButton>(R.id.open).setOnClickListener {
-                editlistener.itemClickListener(adapterPosition)
             }
         }
     }
@@ -59,15 +51,16 @@ class product_adapter(private val items: List<product_list>) :
         parent: ViewGroup,
         viewType: Int
     ): product_adapter.ProductViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.rv_one, parent, false)
-        return ProductViewHolder(view, mylistener, deletelistener,editlistener)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.rv_two, parent, false)
+        return ProductViewHolder(view, mylistener)
     }
 
     override fun onBindViewHolder(holder: product_adapter.ProductViewHolder, position: Int) {
         val item = items[position]
         val p_no = position + 1
         holder.product_title.text = item.title
-        holder.product_price.text = item.price
+        holder.inventory_name.text = item.inventory_name
+        holder.quantity_left.text = item.quantity_left
         holder.product_no.text = p_no.toString() + "."
     }
 

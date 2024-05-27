@@ -41,11 +41,10 @@ class product : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         val items = listOf(
-            product_list("Product 1", "4500/-","200"),
-            product_list("Product 2", "2000/-","120"),
-            product_list("Product 3", "1200/-","14"),
-            product_list("Product 4", "1000000/-","20"),
-            product_list("Product 5", "90000000/-","8"),
+            product_list("Product 1", "Inventory 1", "200"),
+            product_list("Product 2", "Inventory 2", "120"),
+            product_list("Product 3", "Inventory 3", "14"),
+            product_list("Product 4", "Inventory 4", "20"),
         )
 
         previewDialog = BottomSheetDialog(requireContext())
@@ -64,52 +63,55 @@ class product : Fragment() {
                 previewDialog.setCanceledOnTouchOutside(true)
 
                 view.findViewById<TextView>(R.id.product_name).text = items[position].title
-                view.findViewById<TextView>(R.id.product_unit).text = items[position].quantity
-                view.findViewById<TextView>(R.id.product_price).text = items[position].price
+                view.findViewById<TextView>(R.id.product_unit).text = items[position].quantity_left
+                view.findViewById<TextView>(R.id.inv_name).text = items[position].inventory_name
             }
 
         })
 
-        productAdapter.ondelete(object : product_adapter.onitemclick {
-            override fun itemClickListener(position: Int) {
-                Log.d("hello", "delete itemClickListener: ${position}")
-                MaterialAlertDialogBuilder(
-                    requireContext()
-                )
-                    .setTitle("Product Delete")
-                    .setIcon(R.drawable.delete_24px)
-                    .setMessage("You want to delete ${items[position].title}?")
-                    .setPositiveButton("Yes") { dialog, which ->
-                        dialog.dismiss()
-                    }
-                    .setNegativeButton("No") { dialog, which ->
-                        dialog.dismiss()
-                    }
-                    .show();
-
-            }
-        })
-
-        productAdapter.onedit(object : product_adapter.onitemclick {
-            override fun itemClickListener(position: Int) {
-                val view = LayoutInflater.from(requireActivity())
-                    .inflate(R.layout.edit_dialog, null, false)
-                val dialog = MaterialAlertDialogBuilder(
-                    requireContext()
-                )
-                    .setView(view)
-                    .create()
-                view.findViewById<TextInputEditText>(R.id.p_price).text =Editable.Factory.getInstance().newEditable(items[position].price)
-                view.findViewById<TextInputEditText>(R.id.p_name).text =Editable.Factory.getInstance().newEditable(items[position].title)
-                view.findViewById<TextInputEditText>(R.id.p_qty).text =Editable.Factory.getInstance().newEditable(items[position].quantity)
 
 
-                view.findViewById<Button>(R.id.submit_btn).setOnClickListener {
-                    Log.d("hello", "itemClickListener: ${view.findViewById<TextInputEditText>(R.id.p_price).text} ")
-                }
-
-                dialog.show()
-            }
-        })
+//        productAdapter.ondelete(object : product_adapter.onitemclick {
+//            override fun itemClickListener(position: Int) {
+//                Log.d("hello", "delete itemClickListener: ${position}")
+//                MaterialAlertDialogBuilder(
+//                    requireContext()
+//                )
+//                    .setTitle("Product Delete")
+//                    .setIcon(R.drawable.delete_24px)
+//                    .setMessage("You want to delete ${items[position].title}?")
+//                    .setPositiveButton("Yes") { dialog, which ->
+//                        dialog.dismiss()
+//                    }
+//                    .setNegativeButton("No") { dialog, which ->
+//                        dialog.dismiss()
+//                    }
+//                    .show();
+//
+//            }
+//        })
+//
+//        productAdapter.onedit(object : product_adapter.onitemclick {
+//            override fun itemClickListener(position: Int) {
+//                val view = LayoutInflater.from(requireActivity())
+//                    .inflate(R.layout.edit_dialog, null, false)
+//                val dialog = MaterialAlertDialogBuilder(
+//                    requireContext()
+//                )
+//                    .setView(view)
+//                    .create()
+//                view.findViewById<TextInputEditText>(R.id.p_price).text =Editable.Factory.getInstance().newEditable(items[position].price)
+//                view.findViewById<TextInputEditText>(R.id.p_name).text =Editable.Factory.getInstance().newEditable(items[position].title)
+//                view.findViewById<TextInputEditText>(R.id.p_qty).text =Editable.Factory.getInstance().newEditable(items[position].quantity)
+//
+//
+//                view.findViewById<Button>(R.id.submit_btn).setOnClickListener {
+//                    Log.d("hello", "itemClickListener: ${view.findViewById<TextInputEditText>(R.id.p_price).text} ")
+//                    dialog.dismiss()
+//                }
+//
+//                dialog.show()
+//            }
+//        })
     }
 }

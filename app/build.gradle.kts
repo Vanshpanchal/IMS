@@ -17,6 +17,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -36,6 +37,7 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
 }
 
 dependencies {
@@ -56,5 +58,10 @@ dependencies {
     implementation("androidx.compose.material3:material3-adaptive-navigation-suite:1.3.0-beta01")
     implementation("com.google.android.material:material:1.5.0")
 
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+
+//    implementation ("org.mongodb:mongodb-driver-sync:4.7.1")
+//    implementation ("org.litote.kmongo:kmongo:4.5.1" )        // KMongo
 
 }
