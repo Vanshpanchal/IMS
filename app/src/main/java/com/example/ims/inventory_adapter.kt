@@ -39,7 +39,7 @@ class inventory_adapter(private val items: List<inventory_list>): RecyclerView.A
         val sr_no= position+1
         holder.inv_name.text = item.inventoryName
         holder.created_date.text = item.created_date
-        holder.id_no.text = sr_no.toString()
+        holder.id_no.text = sr_no.toString()+"."
 
     }
     override fun onCreateViewHolder(

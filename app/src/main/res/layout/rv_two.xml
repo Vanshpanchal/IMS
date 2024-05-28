@@ -80,7 +80,7 @@
         android:orientation="horizontal"
         android:weightSum="9"
         android:background="@drawable/bg_3"
-        android:paddingVertical="4sp"
+        android:paddingVertical="1sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -105,7 +105,7 @@
             android:paddingHorizontal="8sp"
             android:layout_gravity="center_vertical"
             android:paddingVertical="10sp"
-            android:textSize="16sp"
+            android:textSize="17sp"
             tools:text="1" />
         <TextView
             android:id="@+id/inventory_name"
@@ -116,19 +116,20 @@
             android:textColor="@color/black"
             android:paddingHorizontal="8sp"
             android:paddingVertical="10sp"
-            android:textSize="16sp"
+            android:textSize="17sp"
             tools:text="1" />
 
         <TextView
             android:textColor="@color/black"
             android:id="@+id/qty_remaining"
             android:layout_width="0dp"
+            android:textAlignment="textEnd"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
             android:layout_weight="2.3"
-            android:paddingHorizontal="8sp"
+            android:paddingEnd="15sp"
+            android:paddingStart="0dp"
             android:paddingVertical="10sp"
-            android:textSize="16sp"
+            android:textSize="17sp"
             tools:text="1" />
 
     </LinearLayout>

@@ -49,4 +49,7 @@
     <string name="price_per_unit">Price Per Unit</string>
     <string name="owner_name">Owner Name</string>
     <string name="in_stock">In Stock</string>
+    <string name="inventory_owner">Inventory Owner</string>
+    <string name="invenory_id">Inventory ID</string>
+    <string name="created_date">Created Date</string>
 </resources>

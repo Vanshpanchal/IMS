@@ -1,13 +1,21 @@
 package com.example.ims
 
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ims.databinding.FragmentInventoryBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Date
 import kotlin.math.log
 
 class inventory : Fragment() {
@@ -16,7 +24,7 @@ class inventory : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentInventoryBinding.inflate(inflater,container,false)
+        binding = FragmentInventoryBinding.inflate(inflater, container, false)
         // Inflate the layout for this fragment
         return binding.root
     }
@@ -35,12 +43,36 @@ class inventory : Fragment() {
         val inventoryAdapter = inventory_adapter(inventory)
         binding.rvInventory.adapter = inventoryAdapter
 
-        inventoryAdapter.onItem(object : inventory_adapter.onitemclick{
+        inventoryAdapter.onItem(object : inventory_adapter.onitemclick {
             override fun itemClickListener(position: Int) {
                 Log.d("hello", "itemClickListener: ${position}")
+                val frag = specific_inventory()
+                val bundle = Bundle()
+                bundle.putString("hello","${inventory[position].inventoryName}")
+                frag.arguments = bundle
+                (activity as? MainActivity)?.replacefragement(frag)
             }
 
         })
-    }
+        val currentDate = Date()
+        val formatter = SimpleDateFormat("dd/MM/yyyy")
+        val formattedDate = formatter.format(currentDate)
+        binding.addInv.setOnClickListener {
+            val view = LayoutInflater.from(requireActivity())
+                .inflate(R.layout.inventory_dialog, null, false)
+            val dialog = MaterialAlertDialogBuilder(
+                requireContext()
+            )
+                .setView(view)
+                .create()
 
+            view.findViewById<TextInputEditText>(R.id.date).text = Editable.Factory.getInstance().newEditable(formattedDate)
+            view.findViewById<Button>(R.id.submit_btn).setOnClickListener {
+                Log.d("hello", "itemClickListener: $} ")
+                dialog.dismiss()
+            }
+
+            dialog.show()
+        }
+    }
 }

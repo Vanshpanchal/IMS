@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
             true
         }
     }
-    private fun replacefragement(fragment: Fragment) {
+     fun replacefragement(fragment: Fragment) {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         FragmentTransaction.TRANSIT_ENTER_MASK
