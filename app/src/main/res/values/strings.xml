@@ -52,4 +52,5 @@
     <string name="inventory_owner">Inventory Owner</string>
     <string name="invenory_id">Inventory ID</string>
     <string name="created_date">Created Date</string>
+    <string name="inventory_name">Inventory Name</string>
 </resources>

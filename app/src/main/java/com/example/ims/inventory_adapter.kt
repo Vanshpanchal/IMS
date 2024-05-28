@@ -8,20 +8,29 @@ import androidx.recyclerview.widget.RecyclerView
 
 class inventory_adapter(private val items: List<inventory_list>): RecyclerView.Adapter<inventory_adapter.InventoryViewHolder>()  {
     lateinit var mylistener: onitemclick
+    lateinit var mylistener_1: OnItemLongClickListener
 
 
     interface onitemclick {
         fun itemClickListener(position: Int)
     }
 
+    interface OnItemLongClickListener {
+        fun onItemLongClick(position: Int): Boolean
+    }
     fun onItem(listener: inventory_adapter.onitemclick) {
         mylistener = listener
+    }
+
+    fun onItem_1(listener: inventory_adapter.OnItemLongClickListener) {
+        mylistener_1 = listener
     }
 
 
     class InventoryViewHolder(
         view: View,
-        listener: inventory_adapter.onitemclick
+        listener: onitemclick,
+        mylistener_1: OnItemLongClickListener
     ) : RecyclerView.ViewHolder(view){
         val inv_name: TextView = view.findViewById(R.id.inventory1_name)
         val id_no: TextView = view.findViewById(R.id.p_no)
@@ -30,6 +39,11 @@ class inventory_adapter(private val items: List<inventory_list>): RecyclerView.A
         init {
             view.setOnClickListener {
                 listener.itemClickListener(adapterPosition)
+            }
+
+            view.setOnLongClickListener {
+
+                mylistener_1.onItemLongClick(adapterPosition)
             }
         }
     }
@@ -47,7 +61,7 @@ class inventory_adapter(private val items: List<inventory_list>): RecyclerView.A
         viewType: Int
     ): InventoryViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.rv_three, parent, false)
-        return inventory_adapter.InventoryViewHolder(view, mylistener)
+        return inventory_adapter.InventoryViewHolder(view, mylistener,mylistener_1)
     }
 
     override fun getItemCount(): Int {
