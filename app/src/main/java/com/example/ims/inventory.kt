@@ -93,6 +93,7 @@ class inventory : Fragment() {
         inventoryAdapter.onItem(object : inventory_adapter.onitemclick {
             override fun itemClickListener(position: Int) {
                 Log.d("hello", "itemClickListener: ${position}")
+
                 val frag = specific_inventory()
                 val bundle = Bundle()
                 bundle.putString("hello", "${inventory[position].inventoryName}")
