@@ -17,6 +17,7 @@ class signup_act : AppCompatActivity() {
 
         binding.backSignUp.setOnClickListener {
             finish()
+            finish()
         }
     }
 }

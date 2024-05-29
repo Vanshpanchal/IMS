@@ -1,6 +1,7 @@
 package com.example.ims
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -23,30 +24,66 @@ class MainActivity : AppCompatActivity() {
 //            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
 //            insets
 //        }
-        replacefragement(dashboard())
-       val bottomnav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.Frame, dashboard())
+                .commit()
+        }
+
+        val bottomnav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomnav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.item_1 -> {
-                    replacefragement(dashboard())
+                    replacefragement(dashboard(),"dashboard")
+//                    loadFragment(dashboard())
+                    true
                 }
+
                 R.id.item_2 -> {
-                    replacefragement(inventory())
+                    replacefragement(inventory(),"inventory")
+//                    loadFragment(inventory())
+                    true
                 }
+
                 R.id.item_3 -> {
-                    replacefragement(product())
+//                    loadFragment(product())
+                    replacefragement(product(),"product")
+                    true
                 }
+
+                else -> false
             }
-            true
         }
     }
-     fun replacefragement(fragment: Fragment) {
+
+    fun replacefragement(fragment: Fragment, tag: String) {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         FragmentTransaction.TRANSIT_ENTER_MASK
         fragmentTransaction.replace(R.id.Frame, fragment)
         fragmentTransaction.commit()
 
+
+
     }
+
+//    override fun onBackPressed() {
+//        // If there are fragments in the back stack, pop the back stack
+//        if (supportFragmentManager.backStackEntryCount > 0) {
+//            supportFragmentManager.popBackStack()
+//        } else {
+//            super.onBackPressed()
+//        }
+//
+//    }
+
+//    private fun updateBottomNavigationSelection() {
+//        val currentFragment = supportFragmentManager.findFragmentById(R.id.Frame)
+//        when (currentFragment?.tag) {
+//            "dashboard" -> bind.bottomNavigation.selectedItemId = R.id.item_1
+//            "inventory" -> bind.bottomNavigation.selectedItemId = R.id.item_2
+//        }
+//    }
+
 }
 

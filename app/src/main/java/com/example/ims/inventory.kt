@@ -98,7 +98,7 @@ class inventory : Fragment() {
                 val bundle = Bundle()
                 bundle.putString("hello", "${inventory[position].inventoryName}")
                 frag.arguments = bundle
-                (activity as? MainActivity)?.replacefragement(frag)
+                (activity as? MainActivity)?.replacefragement(frag,"specific_inventory")
             }
 
         })
