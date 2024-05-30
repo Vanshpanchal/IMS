@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
 }
 
 android {
@@ -62,6 +63,11 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
 
     implementation ("com.google.code.gson:gson:2.8.8")
+    implementation("androidx.core:core-splashscreen:1.0.0")
+    val lottieVersion = "3.4.0"
+    implementation ("com.airbnb.android:lottie:$lottieVersion")
+    implementation ("com.google.android.gms:play-services-maps:18.2.0")
+
 //    implementation ("org.mongodb:mongodb-driver-sync:4.7.1")
 //    implementation ("org.litote.kmongo:kmongo:4.5.1" )        // KMongo
 

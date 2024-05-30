@@ -50,7 +50,10 @@ class MainActivity : AppCompatActivity() {
                     replacefragement(product(),"product")
                     true
                 }
-
+                R.id.item_4 -> {
+                    replacefragement(MapsFragment(), "maps")
+                    true
+                }
                 else -> false
             }
         }

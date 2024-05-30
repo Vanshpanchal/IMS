@@ -12,4 +12,7 @@ interface ApiInterface {
     fun setup(): Call<String>
     @POST("/api/products")
     fun createsProductData(@Body data: M_product): Call<M_product>
+
+    @POST("/users/login")
+    fun login(@Body data: Login): Call<Any>
 }

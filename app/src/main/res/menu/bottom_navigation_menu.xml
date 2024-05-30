@@ -15,7 +15,7 @@
         android:icon="@drawable/product"
         android:title="@string/products"/>
     <item
-        android:id="@+id/item_5"
+        android:id="@+id/item_4"
         android:enabled="true"
         android:icon="@drawable/settings_24px"
         android:title="@string/settings"/>

@@ -44,9 +44,27 @@ class Home_act : AppCompatActivity() {
         val gson = GsonBuilder().setLenient().create()
         val retrofitBuilder = Retrofit.Builder()
             .baseUrl(Emulator_URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ApiInterface::class.java)
+
+        val user_data = Login("","")
+        val ref = retrofitBuilder.login(user_data)
+
+//        ref.enqueue(object: Callback<Any>{
+//            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+//                val a = response.body()
+//
+//                    Log.d("hello", "onSuccess: " +a)
+//
+//            }
+//
+//            override fun onFailure(call: Call<Any>, t: Throwable) {
+//                Log.d("hello", "onFailure: " + t.message)
+//            }
+//
+//        })
+
 
         val retrofitData = retrofitBuilder.getProductData()
 //        retrofitData.enqueue(object : Callback<MyData?> {
@@ -63,33 +81,33 @@ class Home_act : AppCompatActivity() {
 //
 //        })
 
-        val retrofitData2 = retrofitBuilder.setup()
-        retrofitData2.enqueue(object : Callback<String?> {
-            override fun onResponse(call: Call<String?>, response: Response<String?>) {
-                val response = response.body()
-                Log.d("hello", "onSuccess: " +response)
-            }
+//        val retrofitData2 = retrofitBuilder.setup()
+//        retrofitData2.enqueue(object : Callback<String?> {
+//            override fun onResponse(call: Call<String?>, response: Response<String?>) {
+//                val response = response.body()
+//                Log.d("hello", "onSuccess: " +response)
+//            }
+//
+//            override fun onFailure(call: Call<String?>, t: Throwable) {
+//                Log.d("hello", "onFailure: " + t.message)
+//            }
+//
+//        })
 
-            override fun onFailure(call: Call<String?>, t: Throwable) {
-                Log.d("hello", "onFailure: " + t.message)
-            }
-
-        })
-
-        val data = M_product("Mobile Burger",5,120)
-        val retrofitData3 = retrofitBuilder.createsProductData(data)
-        retrofitData3.enqueue(object : Callback<M_product> {
-            override fun onResponse(call: Call<M_product>, response: Response<M_product>) {
-                val response = response.body()
-                Log.d("hello", "onSuccess: " +response)
-            }
-
-            override fun onFailure(call: Call<M_product>, t: Throwable) {
-                Log.d("hello", "onFailure: " + t.message)
-            }
-
-
-        })
+//        val data = M_product("Mobile Burger",5,120)
+//        val retrofitData3 = retrofitBuilder.createsProductData(data)
+//        retrofitData3.enqueue(object : Callback<M_product> {
+//            override fun onResponse(call: Call<M_product>, response: Response<M_product>) {
+//                val response = response.body()
+//                Log.d("hello", "onSuccess: " +response)
+//            }
+//
+//            override fun onFailure(call: Call<M_product>, t: Throwable) {
+//                Log.d("hello", "onFailure: " + t.message)
+//            }
+//
+//
+//        })
 
 
     }
