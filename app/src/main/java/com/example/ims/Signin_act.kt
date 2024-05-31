@@ -31,30 +31,36 @@ class Signin_act : AppCompatActivity() {
 
         binding.LoginBtn.setOnClickListener {
             val user_data = Login("henryromero1609@gmail.com" ,"henry@0908")
-            Retro_setup.apiService.login(user_data).enqueue(object : Callback<m_login>{
-                override fun onResponse(call: Call<m_login>, response: Response<m_login>) {
-                    val result = response.body()?.statusCode
-                    val u_id = response.body()?.data?.user?._id
-                    Log.d("API_CHECK", "onResponse: $result")
-                    if (result == 200){
-                        editor.clear()
-                        editor.putString("U_ID",u_id)
-                        editor.putString("ACCESS_TOKEN",response.body()?.data?.accesstoken)
-                        editor.commit()
-                        val intent = Intent(this@Signin_act, MainActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    }
-                }
-
-                override fun onFailure(call: Call<m_login>, t: Throwable) {
-                    Log.d("API_CHECK", "onFailure: ${t.message}")
-                }
-
-            })
+            val intent = Intent(this@Signin_act, MainActivity::class.java)
+            startActivity(intent)
+            finish()
 
         }
 
 
+    }
+
+    private fun api_login(user_data : Login){
+        Retro_setup.apiService.login(user_data).enqueue(object : Callback<m_login>{
+            override fun onResponse(call: Call<m_login>, response: Response<m_login>) {
+                val result = response.body()?.statusCode
+                val u_id = response.body()?.data?.user?._id
+                Log.d("API_CHECK", "onResponse: $result")
+                if (result == 200){
+                    editor.clear()
+                    editor.putString("U_ID",u_id)
+                    editor.putString("ACCESS_TOKEN",response.body()?.data?.accesstoken)
+                    editor.commit()
+                    val intent = Intent(this@Signin_act, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+            }
+
+            override fun onFailure(call: Call<m_login>, t: Throwable) {
+                Log.d("API_CHECK", "onFailure: ${t.message}")
+            }
+
+        })
     }
 }

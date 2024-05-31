@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.databinding.runtime)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.places)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -67,7 +68,7 @@ dependencies {
     val lottieVersion = "3.4.0"
     implementation ("com.airbnb.android:lottie:$lottieVersion")
     implementation ("com.google.android.gms:play-services-maps:18.2.0")
-
+    implementation ("com.google.android.libraries.places:places:3.1.0")
 //    implementation ("org.mongodb:mongodb-driver-sync:4.7.1")
 //    implementation ("org.litote.kmongo:kmongo:4.5.1" )        // KMongo
 
