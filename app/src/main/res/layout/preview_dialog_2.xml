@@ -49,10 +49,11 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/bg_5"
+            android:layout_weight="0.8"
             android:padding="8sp"
-            android:paddingStart="10dp"
+            android:paddingStart="5dp"
+            android:textStyle="bold"
+            android:background="@drawable/bg_5"
             android:text="@string/inventory_name"
             android:textColor="@color/black"
             android:textSize="16sp" />
@@ -61,7 +62,7 @@
             android:id="@+id/inv_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="1.2"
             android:background="@drawable/bg_4"
             android:padding="8sp"
             android:paddingStart="10dp"
@@ -86,19 +87,20 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:background="@drawable/bg_5"
-            android:padding="8sp"
-            android:paddingStart="10dp"
             android:text="Inventory Owner"
             android:textColor="@color/black"
+            android:layout_weight="0.8"
+            android:textStyle="bold"
+            android:padding="8sp"
+            android:paddingStart="5dp"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/inv_owner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="1.2"
             android:background="@drawable/bg_4"
             android:padding="8sp"
             android:paddingStart="10dp"
@@ -123,11 +125,12 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:background="@drawable/bg_5"
-            android:padding="8sp"
-            android:paddingStart="10dp"
             android:text="Created Date"
+            android:textStyle="bold"
+            android:layout_weight="0.8"
+            android:padding="8sp"
+            android:paddingStart="5dp"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
@@ -135,7 +138,7 @@
             android:id="@+id/created_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="1.2"
             android:background="@drawable/bg_4"
             android:padding="8sp"
             android:paddingStart="10dp"
@@ -160,19 +163,57 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:background="@drawable/bg_5"
-            android:padding="8sp"
-            android:paddingStart="10dp"
             android:text="Inventory ID"
             android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_weight="0.8"
+            android:padding="8sp"
+            android:paddingStart="5dp"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/inv_id"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="1.2"
+            android:background="@drawable/bg_4"
+            android:padding="8sp"
+            android:paddingStart="10dp"
+            android:text="Mr.ABC"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/linearLayout6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8sp"
+        android:orientation="horizontal"
+        android:padding="2dp"
+        android:textColor="@color/black"
+        android:weightSum="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_5"
+            android:textStyle="bold"
+            android:text="Address"
+            android:textColor="@color/black"
+            android:layout_weight="0.8"
+            android:padding="8sp"
+            android:paddingStart="5dp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/inv_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.2"
             android:background="@drawable/bg_4"
             android:padding="8sp"
             android:paddingStart="10dp"
@@ -181,5 +222,119 @@
             android:textSize="16sp" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/linearLayout7"
+        android:layout_width="match_parent"
+        android:textStyle="bold"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8sp"
+        android:orientation="horizontal"
+        android:padding="2dp"
+        android:textColor="@color/black"
+        android:weightSum="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout6">
+
+        <TextView
+            android:layout_width="0dp"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_5"
+            android:text="Category"
+            android:textColor="@color/black"
+            android:layout_weight="0.8"
+            android:padding="8sp"
+            android:paddingStart="5dp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/inv_category"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.2"
+            android:background="@drawable/bg_4"
+            android:padding="8sp"
+            android:paddingStart="10dp"
+            android:text="Mr.ABC"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8sp"
+        android:orientation="horizontal"
+        android:padding="2dp"
+        android:textColor="@color/black"
+        android:weightSum="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout7">
+
+        <TextView
+            android:textStyle="bold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_5"
+            android:text="Mobile-No"
+            android:textColor="@color/black"
+            android:layout_weight="0.8"
+            android:padding="8sp"
+            android:paddingStart="5dp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/inv_mobile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.2"
+            android:background="@drawable/bg_4"
+            android:padding="8sp"
+            android:paddingStart="10dp"
+            android:text="Mr.ABC"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/linearLayout9"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8sp"
+        android:orientation="horizontal"
+        android:padding="2dp"
+        android:textColor="@color/black"
+        android:weightSum="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout8">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_5"
+            android:text="Country"
+            android:textColor="@color/black"
+
+            android:textStyle="bold"
+            android:layout_weight="0.8"
+            android:padding="8sp"
+            android:paddingStart="5dp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/inv_country"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.2"
+            android:background="@drawable/bg_4"
+            android:padding="8sp"
+            android:paddingStart="10dp"
+            android:text="Mr.ABC"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

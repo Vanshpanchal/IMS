@@ -59,7 +59,6 @@
     </com.google.android.material.textfield.TextInputLayout>
 
 
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/layout_4"
         android:layout_width="match_parent"
@@ -71,9 +70,9 @@
         app:hintTextColor="@color/blue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_1"
         app:startIconDrawable="@drawable/calendar_today_24px"
-        app:startIconTint="@color/blue"
-        tools:layout_editor_absoluteY="230dp">
+        app:startIconTint="@color/blue">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/date"

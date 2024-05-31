@@ -37,7 +37,7 @@ class start_Act : AppCompatActivity() {
             binding.animationView.postDelayed({
                 startActivity(Intent(this, Home_act::class.java))
                 finish()
-            }, 5000)
+            }, 1000)
         }
 
     }

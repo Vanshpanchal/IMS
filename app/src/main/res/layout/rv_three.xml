@@ -101,23 +101,13 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:textColor="@color/black"
-            android:layout_weight="4.5"
+            android:layout_weight="7.0"
             android:paddingHorizontal="8sp"
             android:layout_gravity="center_vertical"
             android:paddingVertical="10sp"
             android:textSize="16sp"
             tools:text="1" />
-        <TextView
-            android:textColor="@color/black"
-            android:id="@+id/created_date"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="2.5"
-            android:paddingHorizontal="8sp"
-            android:paddingVertical="10sp"
-            android:textSize="16sp"
-            tools:text="1" />
+
         <ImageButton
             android:id="@+id/open"
             android:layout_width="0dp"

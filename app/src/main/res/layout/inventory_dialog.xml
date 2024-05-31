@@ -81,7 +81,7 @@
                 android:id="@+id/i_owner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType=""
+                android:inputType="text"
                 android:maxLines="1"
                 android:textColor="@color/black">
 
@@ -122,27 +122,77 @@
             android:layout_marginTop="5dp"
             android:clickable="false"
             android:focusable="false"
-            android:hint="@string/created_date"
+            android:hint="@string/country"
             app:hintTextColor="@color/blue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layout_3"
-            app:startIconDrawable="@drawable/calendar_today_24px"
+            app:startIconDrawable="@drawable/flag_24px"
             app:startIconTint="@color/blue">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/date"
+                android:id="@+id/country"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clickable="false"
-                android:focusable="false"
-                android:inputType="date"
+                android:inputType="text"
                 android:maxLines="1"
                 android:textColor="@color/black">
 
             </com.google.android.material.textfield.TextInputEditText>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12sp"
+            android:layout_marginTop="5dp"
+            android:clickable="false"
+            android:focusable="false"
+            android:hint="Address"
+            app:hintTextColor="@color/blue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_4"
+            app:startIconDrawable="@drawable/pin_drop_24px"
+            app:startIconTint="@color/blue">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:maxLines="1"
+                android:textColor="@color/black">
+
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12sp"
+            android:layout_marginTop="5dp"
+            android:clickable="false"
+            android:focusable="false"
+            android:hint="Mobile No"
+            app:hintTextColor="@color/blue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_5"
+            app:startIconDrawable="@drawable/dialpad_24px"
+            app:startIconTint="@color/blue">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/mobile_no"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:maxLines="1"
+                android:textColor="@color/black">
+
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
         <Button
             android:id="@+id/submit_btn"
             android:layout_width="match_parent"
@@ -160,6 +210,6 @@
             app:cornerRadius="8sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_4" />
+            app:layout_constraintTop_toBottomOf="@+id/layout_6" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

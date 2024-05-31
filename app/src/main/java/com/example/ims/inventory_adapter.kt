@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class inventory_adapter(private val items: List<inventory_list>): RecyclerView.Adapter<inventory_adapter.InventoryViewHolder>()  {
+class inventory_adapter(private val items: List<DataX>): RecyclerView.Adapter<inventory_adapter.InventoryViewHolder>()  {
     lateinit var mylistener: onitemclick
     lateinit var mylistener_1: OnItemLongClickListener
 
@@ -34,7 +34,6 @@ class inventory_adapter(private val items: List<inventory_list>): RecyclerView.A
     ) : RecyclerView.ViewHolder(view){
         val inv_name: TextView = view.findViewById(R.id.inventory1_name)
         val id_no: TextView = view.findViewById(R.id.p_no)
-        val created_date : TextView = view.findViewById(R.id.created_date)
 
         init {
             view.setOnClickListener {
@@ -52,7 +51,6 @@ class inventory_adapter(private val items: List<inventory_list>): RecyclerView.A
        val item = items[position]
         val sr_no= position+1
         holder.inv_name.text = item.inventoryName
-        holder.created_date.text = item.created_date
         holder.id_no.text = sr_no.toString()+"."
 
     }

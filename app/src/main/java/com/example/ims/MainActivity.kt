@@ -2,6 +2,7 @@ package com.example.ims
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -29,31 +30,45 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.Frame, dashboard())
                 .commit()
         }
+        val user = "sadmin"
 
         val bottomnav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        if (user != "admin") {
+            bottomnav.menu.findItem(R.id.item_4).setIcon(R.drawable.pin_drop_24px)
+            bottomnav.menu.findItem(R.id.item_4).setTitle(R.string.location)
+
+        }
         bottomnav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.item_1 -> {
-                    replacefragement(dashboard(),"dashboard")
+                    replacefragement(dashboard(), "dashboard")
 //                    loadFragment(dashboard())
                     true
                 }
 
                 R.id.item_2 -> {
-                    replacefragement(inventory(),"inventory")
+                    replacefragement(inventory(), "inventory")
 //                    loadFragment(inventory())
                     true
                 }
 
                 R.id.item_3 -> {
 //                    loadFragment(product())
-                    replacefragement(product(),"product")
+                    replacefragement(product(), "product")
                     true
                 }
+
                 R.id.item_4 -> {
-                    replacefragement(MapsFragment(), "maps")
+
+                    if (user == "admin") {
+
+                    } else {
+                        replacefragement(MapsFragment(), "maps")
+                    }
+
                     true
                 }
+
                 else -> false
             }
         }
@@ -65,7 +80,6 @@ class MainActivity : AppCompatActivity() {
         FragmentTransaction.TRANSIT_ENTER_MASK
         fragmentTransaction.replace(R.id.Frame, fragment)
         fragmentTransaction.commit()
-
 
 
     }

@@ -41,32 +41,33 @@ class Home_act : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-        val gson = GsonBuilder().setLenient().create()
-        val retrofitBuilder = Retrofit.Builder()
-            .baseUrl(Emulator_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(ApiInterface::class.java)
-
-        val user_data = Login("","")
-        val ref = retrofitBuilder.login(user_data)
-
-//        ref.enqueue(object: Callback<Any>{
-//            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+        // API
+//        val gson = GsonBuilder().setLenient().create()
+//        val retrofitBuilder = Retrofit.Builder()
+//            .baseUrl(Emulator_URL)
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .build()
+//            .create(ApiInterface::class.java)
+//
+//        val user_data = Login("henryromero1609@gmial.com" ,"henry@0908")
+//        val ref = retrofitBuilder.login(user_data)
+//
+//        ref.enqueue(object: Callback<m_login>{
+//            override fun onResponse(call: Call<m_login>, response: Response<m_login>) {
 //                val a = response.body()
 //
 //                    Log.d("hello", "onSuccess: " +a)
 //
 //            }
 //
-//            override fun onFailure(call: Call<Any>, t: Throwable) {
+//            override fun onFailure(call: Call<m_login>, t: Throwable) {
 //                Log.d("hello", "onFailure: " + t.message)
 //            }
 //
 //        })
 
 
-        val retrofitData = retrofitBuilder.getProductData()
+//        val retrofitData = retrofitBuilder.getProductData()
 //        retrofitData.enqueue(object : Callback<MyData?> {
 //            override fun onResponse(call: Call<MyData?>, response: Response<MyData?>) {
 //                val response = response.body()
