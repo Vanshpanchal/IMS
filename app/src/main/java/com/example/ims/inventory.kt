@@ -9,15 +9,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import com.bumptech.glide.Glide
 import com.example.ims.databinding.FragmentInventoryBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import org.json.JSONObject
 import retrofit2.Call
-import retrofit2.Response
+//import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -88,37 +97,65 @@ class inventory : Fragment() {
         val access_token = sharedPreferences.getString("ACCESS_TOKEN", "None")
         Log.d("API_CHECK", "onViewCreated: $u_id ")
 
-        Retro_setup.apiService.getInventory(access_token!!)
-            .enqueue(object : retrofit2.Callback<m_inventory> {
-                override fun onResponse(call: Call<m_inventory>, response: Response<m_inventory>) {
-                    val res = response.body()?.data
-                    for (i in res!!) {
-                        inv_data.add(i)
-                    }
-                    Log.d("API_CHECK", "onResponse: ${res}")
-                    Log.d("API_CHECK", "onResponse++: ${inv_data}")
+        val url = "http://10.0.2.2:8000/inventory/show"
 
-                    load_data(inv_data)
-//                Log.d("API_CHECK", "onResponse: ${}")
+        val getRequest = CustomGetReq(
+            url,
+            access_token!!,
+            { response ->
+                val jsonResponse = JSONObject(response)
+                val data = jsonResponse.getJSONArray("data").toString()
+
+
+                val gson = Gson()
+                val ListType = object : TypeToken<ArrayList<DataX>>() {}.type
+                val users: ArrayList<DataX> = gson.fromJson(data, ListType)
+                for (i in users) {
+                    inv_data.add(i)
                 }
+                Log.d("API_CHECK", "Response: $users")
+                load_data(inv_data)
+            },
+            { error ->
+                Log.d("API_CHECK", "Error: ${String(error.networkResponse.data)}")
+            }
+        )
+        Volley.newRequestQueue(requireContext()).add(getRequest)
 
-                override fun onFailure(call: Call<m_inventory>, t: Throwable) {
-                    Log.d("API_CHECK", "onFailure: ${t.message}")
-                }
 
-            })
+//        Retro_setup.apiService.getInventory(access_token!!)
+//            .enqueue(object : retrofit2.Callback<m_inventory> {
+//                override fun onResponse(call: Call<m_inventory>, response: Response<m_inventory>) {
+//                    val res = response.body()?.data
+//                    for (i in res!!) {
+//                        inv_data.add(i)
+//                    }
+//                    Log.d("API_CHECK", "onResponse: ${res}")
+//                    Log.d("API_CHECK", "onResponse++: ${inv_data}")
+//
+//                    load_data(inv_data)
+////                Log.d("API_CHECK", "onResponse: ${}")
+//                }
+//
+//                override fun onFailure(call: Call<m_inventory>, t: Throwable) {
+//                    Log.d("API_CHECK", "onFailure: ${t.message}")
+//                }
+//
+//            })
     }
+
     private fun load_data(inv: ArrayList<DataX>) {
         var inventoryAdapter = inventory_adapter(inv)
         binding.rvInventory.adapter = inventoryAdapter
         Log.d("API_CHECK", "load_data: $inv")
         inventoryAdapter.onItem(object : inventory_adapter.onitemclick {
             override fun itemClickListener(position: Int) {
-                Log.d("hello", "itemClickListener: ${position}")
+                Log.d("hello", "itemClickListener: ${inv[position].inventoryId}")
 
                 val frag = specific_inventory()
                 val bundle = Bundle()
                 bundle.putString("inv_id", "${inv[position].inventoryId}")
+                bundle.putString("inv_name", "${inv[position].inventoryName}")
                 frag.arguments = bundle
                 (activity as? MainActivity)?.replacefragement(frag, "specific_inventory")
             }
@@ -134,6 +171,9 @@ class inventory : Fragment() {
                 previewDialog.show()
                 previewDialog.setCancelable(true)
                 previewDialog.setCanceledOnTouchOutside(true)
+
+                view.findViewById<ImageView>(R.id.img)
+
 
                 view.findViewById<TextView>(R.id.inv_name).text = inv_data[position].inventoryName
                 view.findViewById<TextView>(R.id.inv_owner).text = inv_data[position].ManagerName

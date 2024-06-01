@@ -107,15 +107,16 @@
             android:paddingVertical="10sp"
             android:textSize="17sp"
             tools:text="1" />
+
         <TextView
             android:id="@+id/inventory_name"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1.5"
-            android:textColor="@color/black"
             android:paddingHorizontal="8sp"
             android:paddingVertical="10sp"
+            android:textColor="@color/black"
             android:textSize="17sp"
             tools:text="1" />
 

@@ -34,7 +34,7 @@
         app:layout_constraintTop_toBottomOf="@+id/view2" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/P_img"
         android:layout_width="130dp"
         android:layout_height="130dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,7 +51,7 @@
         android:padding="2dp"
         android:layout_marginTop="15dp"
         android:weightSum="2"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/P_img"
         tools:layout_editor_absoluteX="16dp">
 
         <TextView
@@ -98,12 +98,12 @@
             android:background="@drawable/bg_5"
             android:padding="8sp"
             android:paddingStart="10dp"
-            android:text="Inventory Name"
+            android:text="Inventory ID"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/inv_name"
+            android:id="@+id/inv_id"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -135,7 +135,7 @@
             android:background="@drawable/bg_5"
             android:padding="8sp"
             android:paddingStart="10dp"
-            android:text="Product Unit"
+            android:text="Stock"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
@@ -172,19 +172,19 @@
             android:background="@drawable/bg_5"
             android:padding="8sp"
             android:paddingStart="10dp"
-            android:text="@string/owner_name"
+            android:text="Category"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/owner_name"
+            android:id="@+id/category"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/bg_4"
             android:padding="8sp"
             android:paddingStart="10dp"
-            android:text="Mr.ABC"
+            android:text="Grocery"
             android:textColor="@color/black"
             android:textSize="16sp" />
     </LinearLayout>
@@ -209,19 +209,19 @@
             android:background="@drawable/bg_5"
             android:padding="8sp"
             android:paddingStart="10dp"
-            android:text="@string/in_stock"
+            android:text="Product ID"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/in_stock"
+            android:id="@+id/P_id"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/bg_4"
             android:padding="8sp"
             android:paddingStart="10dp"
-            android:text="YES"
+            android:text="123"
             android:textColor="@color/black"
             android:textSize="16sp" />
     </LinearLayout>
@@ -246,21 +246,22 @@
             android:background="@drawable/bg_5"
             android:padding="8sp"
             android:paddingStart="10dp"
-            android:text="Product ID"
+            android:text="Price Per Unit"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/product_id"
+            android:id="@+id/pp_unit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/bg_4"
             android:padding="8sp"
             android:paddingStart="10dp"
-            android:text="210"
+            android:text="123/-"
             android:textColor="@color/black"
             android:textSize="16sp" />
     </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

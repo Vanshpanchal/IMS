@@ -41,10 +41,10 @@ class product : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         val items = listOf(
-            product_list("Product 1", "Inventory 1", "200"),
-            product_list("Product 2", "Inventory 2", "120"),
-            product_list("Product 3", "Inventory 3", "14"),
-            product_list("Product 4", "Inventory 4", "20"),
+            product_list("Product 1", "1", "200"),
+            product_list("Product 2", "2", "120"),
+            product_list("Product 3", "3", "14"),
+            product_list("Product 4", "4", "20"),
         )
 
         previewDialog = BottomSheetDialog(requireContext())
@@ -62,9 +62,9 @@ class product : Fragment() {
                 previewDialog.setCancelable(true)
                 previewDialog.setCanceledOnTouchOutside(true)
 
-                view.findViewById<TextView>(R.id.product_name).text = items[position].title
-                view.findViewById<TextView>(R.id.product_unit).text = items[position].quantity_left
-                view.findViewById<TextView>(R.id.inv_name).text = items[position].inventory_name
+//                view.findViewById<TextView>(R.id.product_name).text = items[position].title
+//                view.findViewById<TextView>(R.id.product_unit).text = items[position].quantity_left
+//                view.findViewById<TextView>(R.id.inv_name).text = items[position].inventory_name
             }
 
         })

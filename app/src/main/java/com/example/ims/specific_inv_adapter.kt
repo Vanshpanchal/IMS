@@ -3,10 +3,11 @@ package com.example.ims
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class specific_inv_adapter(private val items: List<product_list>) :
+class specific_inv_adapter(private val items: ArrayList<inv_itemsItem>) :
 RecyclerView.Adapter<specific_inv_adapter.Inv_ViewHolder>() {
     lateinit var mylistener: specific_inv_adapter.onitemclick
 
@@ -39,9 +40,9 @@ RecyclerView.Adapter<specific_inv_adapter.Inv_ViewHolder>() {
     override fun onBindViewHolder(holder: Inv_ViewHolder, position: Int) {
         val item = items[position]
         val p_no = position + 1
-        holder.product_title.text = item.title
-        holder.inventory_name.text = item.inventory_name
-        holder.quantity_left.text = item.quantity_left
+        holder.product_title.text = item.itemName
+        holder.inventory_name.text = item.inventoryId
+        holder.quantity_left.text = "Stock: "+item.stock.toString()
         holder.product_no.text = p_no.toString() + "."
     }
 

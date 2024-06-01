@@ -59,8 +59,8 @@ class product_adapter(private val items: List<product_list>) :
         val item = items[position]
         val p_no = position + 1
         holder.product_title.text = item.title
-        holder.inventory_name.text = item.inventory_name
-        holder.quantity_left.text = item.quantity_left
+        holder.inventory_name.text = item.id
+        holder.quantity_left.text = "Stock: "+item.quantity_left
         holder.product_no.text = p_no.toString() + "."
     }
 
