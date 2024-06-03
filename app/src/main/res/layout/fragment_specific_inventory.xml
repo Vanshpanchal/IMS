@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".specific_inventory">
 
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"

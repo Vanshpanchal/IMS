@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
+    alias(libs.plugins.google.gms.google.services)
 //    id("com.google.dagger.hilt.android")
 //    id ("kotlin-kapt")
 }
@@ -58,6 +59,7 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.places)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.firebase.database)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -75,12 +77,12 @@ dependencies {
     implementation ("com.airbnb.android:lottie:$lottieVersion")
     implementation ("com.google.android.gms:play-services-maps:18.2.0")
     implementation ("com.google.android.libraries.places:places:3.1.0")
+
 //    implementation ("org.mongodb:mongodb-driver-sync:4.7.1")
 //    implementation ("org.litote.kmongo:kmongo:4.5.1" )        // KMongo
 //    kapt(libs.hilt.android.compiler)
 //
 //    implementation ("com.google.dagger:hilt-android:2.38.1")
-
 
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0-beta01")
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.5.0-beta01")
@@ -90,5 +92,13 @@ dependencies {
     implementation("com.android.volley:volley:1.2.1")
     implementation ("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
+
+    // Firebase
+
+    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+
+
 
 }

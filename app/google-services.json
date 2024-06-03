@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1053933897378",
+    "project_id": "ims-app-64774",
+    "storage_bucket": "ims-app-64774.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1053933897378:android:f1ea1398788fa6ccc8b9fb",
+        "android_client_info": {
+          "package_name": "com.example.ims"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcpgK5aQTVZ1meokBeLXk6ZQ79mGrgLac"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class inventory_adapter(private val items: List<DataX>): RecyclerView.Adapter<inventory_adapter.InventoryViewHolder>()  {
+class inventory_adapter(private val items: ArrayList<InventoryItems>): RecyclerView.Adapter<inventory_adapter.InventoryViewHolder>()  {
     lateinit var mylistener: onitemclick
     lateinit var mylistener_1: OnItemLongClickListener
 
@@ -50,7 +50,7 @@ class inventory_adapter(private val items: List<DataX>): RecyclerView.Adapter<in
     override fun onBindViewHolder(holder: inventory_adapter.InventoryViewHolder, position: Int) {
        val item = items[position]
         val sr_no= position+1
-        holder.inv_name.text = item.inventoryName
+        holder.inv_name.text = item.InventoryName
         holder.id_no.text = sr_no.toString()+"."
 
     }

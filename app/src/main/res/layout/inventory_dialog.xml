@@ -88,31 +88,7 @@
             </com.google.android.material.textfield.TextInputEditText>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layout_3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="12sp"
-            android:layout_marginTop="5dp"
-            android:autofillHints="quantity"
-            android:hint="@string/invenory_id"
-            app:hintTextColor="@color/blue"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_2"
-            app:startIconDrawable="@drawable/numbers_24px"
-            app:startIconTint="@color/blue">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/i_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:maxLines="1"
-                android:textColor="@color/black">
-
-            </com.google.android.material.textfield.TextInputEditText>
-        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layout_4"
@@ -126,7 +102,7 @@
             app:hintTextColor="@color/blue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_3"
+            app:layout_constraintTop_toBottomOf="@+id/layout_2"
             app:startIconDrawable="@drawable/flag_24px"
             app:startIconTint="@color/blue">
 
@@ -153,9 +129,10 @@
             app:hintTextColor="@color/blue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_4"
+            app:layout_constraintTop_toBottomOf="@+id/layout_6"
             app:startIconDrawable="@drawable/pin_drop_24px"
             app:startIconTint="@color/blue">
+
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/address"
@@ -164,8 +141,17 @@
                 android:inputType="text"
                 android:maxLines="1"
                 android:textColor="@color/black">
-
             </com.google.android.material.textfield.TextInputEditText>
+
+            <ImageButton
+                android:id="@+id/locate"
+                android:contentDescription="locate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/pin_drop_24px"
+                android:background="@color/transparent"
+                android:layout_margin="5dp"
+                android:layout_gravity="end"/>
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layout_6"
@@ -179,7 +165,7 @@
             app:hintTextColor="@color/blue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_5"
+            app:layout_constraintTop_toBottomOf="@+id/layout_4"
             app:startIconDrawable="@drawable/dialpad_24px"
             app:startIconTint="@color/blue">
 
@@ -210,6 +196,6 @@
             app:cornerRadius="8sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_6" />
+            app:layout_constraintTop_toBottomOf="@+id/layout_5" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

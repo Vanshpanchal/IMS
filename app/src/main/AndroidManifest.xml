@@ -43,13 +43,13 @@
             android:value="AIzaSyAb3_bVoy_Fjs2uLQTc27PUCCZBFznN7Gg" />
 
         <activity
-            android:name=".Signin_act"
+            android:name=".SigninAct"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".signup_act"
+            android:name=".SignupAct"
             android:exported="false" />
         <activity
             android:name=".Home_act"
@@ -58,7 +58,7 @@
 
         </activity>
         <activity
-            android:name=".start_Act"
+            android:name=".StartAct"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

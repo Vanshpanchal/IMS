@@ -79,7 +79,7 @@ class specific_inventory : Fragment() {
 
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSpecificInventoryBinding.inflate(inflater, container, false)
 
         // Retrieve the data from the arguments
@@ -98,42 +98,7 @@ class specific_inventory : Fragment() {
             requireContext().getSharedPreferences("USERDATA", AppCompatActivity.MODE_PRIVATE)
         editor = sharedPreferences.edit()
 
-        val access_token = sharedPreferences.getString("ACCESS_TOKEN", "None")
 
-        val url = "http://10.0.2.2:8000/items/inventoryItems"
-        val inv_id = arguments?.getString("inv_id")!!
-
-        val img = R.drawable.img1
-        val bodyParams = JSONObject().apply {
-            put("inventoryId", inv_id)
-
-        }
-        val params = mapOf(
-            "inventoryId___" to inv_id
-        )
-
-        val getRequest = CustomReq1(
-            url,
-            access_token!!,
-            params,
-            bodyParams,
-            { response ->
-                val gson = Gson()
-                val ListType = object : TypeToken<ArrayList<inv_itemsItem>>() {}.type
-                val users: ArrayList<inv_itemsItem> = gson.fromJson(response, ListType)
-                for (i in users) {
-                    product.add(i)
-                }
-                load_data()
-                Log.d("API_CHECK", "Response: ${response.get(0)}")
-
-            },
-            { error ->
-                Log.d("API_CHECK", "Error: ${String(error.networkResponse.data)}")
-            }
-        )
-
-        Volley.newRequestQueue(requireContext()).add(getRequest)
 
         binding.addProduct.setOnClickListener {
             val view = LayoutInflater.from(requireContext())
@@ -149,7 +114,7 @@ class specific_inventory : Fragment() {
             }
             view.findViewById<Button>(R.id.submit_btn).setOnClickListener {
                 Log.d("TAG", "result:${imageView} ")
-                add_product(inv_id, access_token, imageView!!)
+//                add_product(inv_id, access_token, imageView!!)
                 dialog.dismiss()
 
             }
@@ -253,7 +218,7 @@ class specific_inventory : Fragment() {
         }
     }
 
-    fun add_product(inv_id: String, access_token: String ,imageView: Uri) {
+    fun add_product(inv_id: String, access_token: String, imageView: Uri) {
         val url = "http://10.0.2.2:8000/items/add"
         Log.d("hello", "itemClickListener: ${imageView}} ")
 //                val img = drawableToByteArray(R.drawable.img2)
@@ -278,6 +243,45 @@ class specific_inventory : Fragment() {
             { response ->
 
                 Log.d("API_CHECK", "Response: ${response}")
+
+            },
+            { error ->
+                Log.d("API_CHECK", "Error: ${String(error.networkResponse.data)}")
+            }
+        )
+
+        Volley.newRequestQueue(requireContext()).add(getRequest)
+    }
+
+    fun fetch_api() {
+        val access_token = sharedPreferences.getString("ACCESS_TOKEN", "None")
+
+        val url = "http://10.0.2.2:8000/items/inventoryItems"
+        val inv_id = arguments?.getString("inv_id")!!
+
+        val img = R.drawable.img1
+        val bodyParams = JSONObject().apply {
+            put("inventoryId", inv_id)
+
+        }
+        val params = mapOf(
+            "inventoryId___" to inv_id
+        )
+
+        val getRequest = CustomReq1(
+            url,
+            access_token!!,
+            params,
+            bodyParams,
+            { response ->
+                val gson = Gson()
+                val ListType = object : TypeToken<ArrayList<inv_itemsItem>>() {}.type
+                val users: ArrayList<inv_itemsItem> = gson.fromJson(response, ListType)
+                for (i in users) {
+                    product.add(i)
+                }
+                load_data()
+                Log.d("API_CHECK", "Response: ${response.get(0)}")
 
             },
             { error ->

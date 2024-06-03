@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".inventory">
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/Progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"

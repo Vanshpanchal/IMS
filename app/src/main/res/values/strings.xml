@@ -56,4 +56,5 @@
     <string name="location">Location</string>
     <string name="setting">Setting</string>
     <string name="country">Country</string>
+    <string name="inventory_n_management_n_system">Inventory \n Management \n System</string>
 </resources>

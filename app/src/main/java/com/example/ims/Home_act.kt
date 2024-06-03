@@ -2,20 +2,9 @@ package com.example.ims
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.ims.databinding.ActivityHomeBinding
-import com.google.gson.GsonBuilder
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class Home_act : AppCompatActivity() {
 
@@ -31,13 +20,13 @@ class Home_act : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.signIn.setOnClickListener {
-            val intent = Intent(this, Signin_act::class.java)
+            val intent = Intent(this, SigninAct::class.java)
             startActivity(intent)
             finish()
         }
 
         binding.singUp.setOnClickListener {
-            val intent = Intent(this, signup_act::class.java)
+            val intent = Intent(this, SignupAct::class.java)
             startActivity(intent)
             finish()
         }
