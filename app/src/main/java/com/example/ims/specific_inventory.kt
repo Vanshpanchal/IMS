@@ -228,18 +228,24 @@ class specific_inventory : Fragment() {
         simulateDataLoading()
         specific_inv_adapter.onItem(object : specific_inv_adapter.onitemclick {
             override fun itemClickListener(position: Int) {
+                sr = FirebaseStorage.getInstance()
+                    .getReference("Product/" + auth.currentUser?.uid + "/Inventory" + inventory_id)
+                    .child("Product${product[position].ProductId}")
                 val view = View.inflate(requireContext(), R.layout.preview_dialog, null)
+                val imageView = view.findViewById<ImageView>(R.id.P_img)
+                sr.downloadUrl.addOnSuccessListener {
+                    Glide.with(requireContext()).load(it).into(imageView)
+                }
                 previewDialog.setContentView(view)
                 previewDialog.show()
                 previewDialog.setCancelable(true)
                 previewDialog.setCanceledOnTouchOutside(true)
-                val imageView = view.findViewById<ImageView>(R.id.P_img)
                 val imageUrl = "----"
-//                Glide.with(requireContext()).load(imageUrl).into(imageView)
                 view.findViewById<TextView>(R.id.product_name).text = product[position].ItemName
                 view.findViewById<TextView>(R.id.product_unit).text =
                     product[position].Stock.toString()
-                view.findViewById<TextView>(R.id.inv_id).text = product[position].InventoryId
+                view.findViewById<TextView>(R.id.inv_id).text =
+                    product[position].InventoryId?.slice(0..9) + "....."
                 view.findViewById<TextView>(R.id.category).text = product[position].Category
                 view.findViewById<TextView>(R.id.pp_unit).text =
                     product[position].PricePerUnit.toString() + "/-"
