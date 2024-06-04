@@ -102,13 +102,13 @@ class inventory : Fragment() {
 
             view.findViewById<Button>(R.id.submit_btn).setOnClickListener {
 
-                    val inventoryInfo = hashMapOf(
-                        "InventoryName" to view.findViewById<TextInputEditText>(R.id.i_name).text.toString(),
-                        "Country" to view.findViewById<TextInputEditText>(R.id.country).text.toString(),
-                        "MobileNo" to view.findViewById<TextInputEditText>(R.id.mobile_no).text.toString(),
-                        "Address" to view.findViewById<TextInputEditText>(R.id.address).text.toString(),
-                        "InventoryOwner" to view.findViewById<TextInputEditText>(R.id.i_owner).text.toString(),
-                        "CreatedAt" to Timestamp.now().toDate(),
+                val inventoryInfo = hashMapOf(
+                    "InventoryName" to view.findViewById<TextInputEditText>(R.id.i_name).text.toString(),
+                    "Country" to view.findViewById<TextInputEditText>(R.id.country).text.toString(),
+                    "MobileNo" to view.findViewById<TextInputEditText>(R.id.mobile_no).text.toString(),
+                    "Address" to view.findViewById<TextInputEditText>(R.id.address).text.toString(),
+                    "InventoryOwner" to view.findViewById<TextInputEditText>(R.id.i_owner).text.toString(),
+                    "CreatedAt" to Timestamp.now().toDate(),
 
                     )
                 fs.collection("Inventory").document(auth.currentUser?.uid!!)
@@ -138,7 +138,7 @@ class inventory : Fragment() {
 
     }
 
-    private fun addressApi(Address: String){
+    private fun addressApi(Address: String) {
         var cordinates = listOf<Double>()
         val url =
             "https://api.geoapify.com/v1/geocode/search?text=$Address vadodara&apiKey=a4df04f3e2154cafbf08d57831558743"
@@ -167,7 +167,7 @@ class inventory : Fragment() {
                         P_latitude = latitude
                     }
                 }
-                        Log.d("D_CHECK", "addressApi: ${longitude}  $latitude}")
+                Log.d("D_CHECK", "addressApi: ${longitude}  $latitude}")
 
 // Cordinates
 //                Log.d("D_CHECK", "addressApi: ${cordinates}")
@@ -205,6 +205,7 @@ class inventory : Fragment() {
                 updateUi(inventoryItems)
             }
     }
+
     private fun custom_snackbar(message: String) {
         val bar = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
         bar.setBackgroundTint(resources.getColor(R.color.blue))
@@ -230,6 +231,8 @@ class inventory : Fragment() {
                 val frag = specific_inventory()
                 val bundle = Bundle()
                 bundle.putString("inv_name", "${inv[position].InventoryName}")
+                bundle.putString("inv_id", "${inv[position].InventoryID}")
+
                 frag.arguments = bundle
                 (activity as? MainActivity)?.replacefragement(frag, "specific_inventory")
             }

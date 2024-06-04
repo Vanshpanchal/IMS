@@ -86,7 +86,7 @@
             app:startIconTint="@color/blue">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/i_owner"
+                android:id="@+id/P_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
@@ -96,31 +96,7 @@
             </com.google.android.material.textfield.TextInputEditText>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layout_3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="12sp"
-            android:layout_marginTop="5dp"
-            android:autofillHints="quantity"
-            android:hint="Product ID"
-            app:hintTextColor="@color/blue"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_2"
-            app:startIconDrawable="@drawable/numbers_24px"
-            app:startIconTint="@color/blue">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/i_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:maxLines="1"
-                android:textColor="@color/black">
-
-            </com.google.android.material.textfield.TextInputEditText>
-        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layout_4"
@@ -134,7 +110,7 @@
             app:hintTextColor="@color/blue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_3"
+            app:layout_constraintTop_toBottomOf="@+id/layout_2"
             app:startIconDrawable="@drawable/flag_24px"
             app:startIconTint="@color/blue">
 
@@ -150,32 +126,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layout_5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="12sp"
-            android:layout_marginTop="5dp"
-            android:clickable="false"
-            android:focusable="false"
-            android:hint="Inventory ID"
-            app:hintTextColor="@color/blue"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_4"
-            app:startIconDrawable="@drawable/pin_drop_24px"
-            app:startIconTint="@color/blue">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/inv_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:maxLines="1"
-                android:textColor="@color/black">
-
-            </com.google.android.material.textfield.TextInputEditText>
-        </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layout_6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -187,7 +137,7 @@
             app:hintTextColor="@color/blue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_5"
+            app:layout_constraintTop_toBottomOf="@+id/layout_4"
             app:startIconDrawable="@drawable/dialpad_24px"
             app:startIconTint="@color/blue">
 

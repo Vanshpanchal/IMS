@@ -1,16 +1,14 @@
 package com.example.ims
 
+import com.google.firebase.Timestamp
+
 data class inv_itemsItem(
-    val __v: Int,
-    val _id: String,
-    val category: String,
-    val createdAt: String,
-    val inventoryId: String,
-    val itemId: String,
-    val itemImageurl: String,
-    val itemName: String,
-    val pricePerUnit: Int,
-    val stock: Int,
-    val updatedAt: String,
-    val userId: String
+    val Category: String? = null,
+    val InventoryId: String? = null,
+    val ItemName: String? = null,
+    val PricePerUnit: String? = null,
+    val ProductId: String? = null,
+    val Stock: String? = null,
+    val CreatedAt: Timestamp? = null
+
 )

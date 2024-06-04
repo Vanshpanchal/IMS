@@ -40,9 +40,9 @@ RecyclerView.Adapter<specific_inv_adapter.Inv_ViewHolder>() {
     override fun onBindViewHolder(holder: Inv_ViewHolder, position: Int) {
         val item = items[position]
         val p_no = position + 1
-        holder.product_title.text = item.itemName
-        holder.inventory_name.text = item.inventoryId
-        holder.quantity_left.text = "Stock: "+item.stock.toString()
+        holder.product_title.text = item.ItemName
+        holder.inventory_name.text = item.Category
+        holder.quantity_left.text = "Stock: "+item.Stock.toString()
         holder.product_no.text = p_no.toString() + "."
     }
 
