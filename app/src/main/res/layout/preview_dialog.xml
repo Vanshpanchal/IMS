@@ -17,11 +17,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
+    <ImageButton
+        android:id="@+id/notify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="25dp"
+        android:backgroundTint="@color/blue3"
+        android:contentDescription="@string/notify"
+        android:src="@drawable/notification_add_24px"
+        app:layout_constraintBottom_toTopOf="@+id/P_img"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view2"
+        app:tint="@color/black" />
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginVertical="15dp"
         android:paddingHorizontal="15dp"
@@ -37,19 +48,21 @@
         android:id="@+id/P_img"
         android:layout_width="130dp"
         android:layout_height="130dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/product"
         android:layout_marginTop="15dp"
+        android:scaleType="centerCrop"
+        tools:src="@drawable/add_photo_alternate_20px"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
+
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="8sp"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal"
         android:padding="2dp"
-        android:layout_marginTop="15dp"
         android:weightSum="2"
         app:layout_constraintTop_toBottomOf="@+id/P_img"
         tools:layout_editor_absoluteX="16dp">
@@ -78,42 +91,6 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8sp"
-        android:orientation="horizontal"
-        android:padding="2dp"
-        android:textColor="@color/black"
-        android:weightSum="2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/bg_5"
-            android:padding="8sp"
-            android:paddingStart="10dp"
-            android:text="Inventory ID"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/inv_id"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/bg_4"
-            android:padding="8sp"
-            android:paddingStart="10dp"
-            android:text="1500/-"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
-    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout4"
@@ -126,7 +103,7 @@
         android:weightSum="2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
         <TextView
             android:layout_width="0dp"

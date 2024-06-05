@@ -79,8 +79,8 @@ class specific_inventory : Fragment() {
                 imageUri = result?.data!!.data!!
                 product_img?.setImageURI(result.data!!.data)
                 sr = FirebaseStorage.getInstance()
-                    .getReference("Product/" + auth.currentUser?.uid + "/Inventory" + inventory_id)
-                    .child("Product${result.data?.data?.lastPathSegment}")
+                    .getReference("Product/" + auth.currentUser?.uid)
+                    .child("Inv${inventory_id}_Product${result.data?.data?.lastPathSegment}")
                 sr.putFile(result.data?.data!!).addOnSuccessListener {
                     Log.d("D_CHECK", "Product Image Uploaded ")
                     dialog.dismiss()
@@ -208,6 +208,7 @@ class specific_inventory : Fragment() {
                     Log.d("D_CHECK", "getInventory: $r")
                     product.add(r)
                 }
+                product.sortBy { it.CreatedAt }
                 load_data(product)
             }
     }
@@ -229,8 +230,8 @@ class specific_inventory : Fragment() {
         specific_inv_adapter.onItem(object : specific_inv_adapter.onitemclick {
             override fun itemClickListener(position: Int) {
                 sr = FirebaseStorage.getInstance()
-                    .getReference("Product/" + auth.currentUser?.uid + "/Inventory" + inventory_id)
-                    .child("Product${product[position].ProductId}")
+                    .getReference("Product/" + auth.currentUser?.uid)
+                    .child("Inv${inventory_id}_Product${product[position].ProductId}")
                 val view = View.inflate(requireContext(), R.layout.preview_dialog, null)
                 val imageView = view.findViewById<ImageView>(R.id.P_img)
                 sr.downloadUrl.addOnSuccessListener {
@@ -244,13 +245,55 @@ class specific_inventory : Fragment() {
                 view.findViewById<TextView>(R.id.product_name).text = product[position].ItemName
                 view.findViewById<TextView>(R.id.product_unit).text =
                     product[position].Stock.toString()
-                view.findViewById<TextView>(R.id.inv_id).text =
-                    product[position].InventoryId?.slice(0..9) + "....."
                 view.findViewById<TextView>(R.id.category).text = product[position].Category
                 view.findViewById<TextView>(R.id.pp_unit).text =
                     product[position].PricePerUnit.toString() + "/-"
                 view.findViewById<TextView>(R.id.P_id).text = product[position].ProductId
 
+            }
+
+        })
+
+        specific_inv_adapter.onItem_1(object : specific_inv_adapter.OnItemLongClickListener {
+            override fun onItemLongClick(position: Int): Boolean {
+                MaterialAlertDialogBuilder(
+                    requireContext(),
+                )
+                    .setTitle("Remove Product")
+                    .setIcon(R.drawable.product)
+                    .setMessage("Are you sure you want to remove ${product[position].ItemName}?")
+                    .setPositiveButton("Yes") { dialog, which ->
+                        sr = FirebaseStorage.getInstance()
+                            .getReference("Product/" + auth.currentUser?.uid)
+                            .child("Inv${inventory_id}_Product${product[position].ProductId}")
+                        sr.delete()
+
+//                        val product_ID = product[position]
+                        fs.collection("Product").document(auth.currentUser?.uid!!)
+                            .collection("MyProduct")
+                            .whereEqualTo("ProductId", product[position].ProductId).get()
+                            .addOnSuccessListener {
+                                for (doc in it) {
+                                    val docRef = doc.reference
+                                    docRef.delete().addOnSuccessListener {
+                                        get_data()
+                                        Log.d("D_CHECK", "onItemLongClick: Deleted")
+                                    }.addOnFailureListener {
+                                        Log.d("D_CHECK", "onItemLongClick: ${it.message}")
+                                    }
+                                }
+                                Log.d("D_CHECK", "onItemLongClick: ${it}")
+                            }.addOnFailureListener {
+                                Log.d("D_CHECK", "onItemLongClick: ${it.message}")
+                            }
+
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton("No") { dialog, which ->
+                        dialog.dismiss()
+                    }
+                    .show();
+                return true
             }
 
         })
