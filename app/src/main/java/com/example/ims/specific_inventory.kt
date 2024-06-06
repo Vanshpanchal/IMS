@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -36,6 +37,7 @@ import com.example.ims.databinding.FragmentSpecificInventoryBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -128,6 +130,19 @@ class specific_inventory : Fragment() {
         get_data()
 
 
+        binding.toggleButton.addOnButtonCheckedListener { toggleButton, checkedId, isChecked ->
+            if (isChecked) {
+                when (checkedId) {
+                    R.id.Category -> sort_data(1)
+                    R.id.Time -> sort_data(2)
+                    R.id.Name -> sort_data(3)
+                    R.id.Stock -> sort_data(4)
+                    else -> get_data()
+                }
+            } else {
+                get_data()
+            }
+        }
         binding.addProduct.setOnClickListener {
             add_dailog = LayoutInflater.from(requireContext())
                 .inflate(R.layout.product_add_dialog, null, false)
@@ -196,7 +211,7 @@ class specific_inventory : Fragment() {
         }).into(view.findViewById(R.id.P_img))
     }
 
-    fun get_data() {
+    public fun get_data() {
         Log.d("D_CHECK", "getInventory: $inventory_id")
 
         fs = FirebaseFirestore.getInstance()
@@ -221,12 +236,12 @@ class specific_inventory : Fragment() {
     }
 
     fun load_data(product: ArrayList<inv_itemsItem>) {
+        simulateDataLoading()
         val specific_inv_adapter = specific_inv_adapter(product)
         binding.rvInvProduct.adapter = specific_inv_adapter
         binding.rvInvProduct.viewTreeObserver.addOnGlobalLayoutListener {
             binding.ProgressBar.visibility = View.GONE
         }
-        simulateDataLoading()
         specific_inv_adapter.onItem(object : specific_inv_adapter.onitemclick {
             override fun itemClickListener(position: Int) {
                 sr = FirebaseStorage.getInstance()
@@ -249,7 +264,6 @@ class specific_inventory : Fragment() {
                 view.findViewById<TextView>(R.id.pp_unit).text =
                     product[position].PricePerUnit.toString() + "/-"
                 view.findViewById<TextView>(R.id.P_id).text = product[position].ProductId
-
             }
 
         })
@@ -297,6 +311,79 @@ class specific_inventory : Fragment() {
             }
 
         })
+
+        specific_inv_adapter.onEdit(object : specific_inv_adapter.EditClick {
+            override fun onEditClick(position: Int) {
+                Log.d("D_CHECK", "onEditClick: $position")
+                val view =
+                    View.inflate(requireContext(), R.layout.edit_dialog, null)
+
+                view.findViewById<TextView>(R.id.textView).text = product[position].ItemName
+                view.findViewById<TextInputEditText>(R.id.p_qty).text =
+                    Editable.Factory.getInstance().newEditable(product[position].Stock)
+                MaterialAlertDialogBuilder(requireContext()).apply {
+                    setView(view)
+                    setPositiveButton("Save") { dialog, which ->
+                        fs.collection("Product").document(auth.currentUser?.uid!!)
+                            .collection("MyProduct")
+                            .whereEqualTo("ProductId", product[position].ProductId).get()
+                            .addOnSuccessListener {
+                                for (doc in it) {
+                                    val docRef = doc.reference
+                                    docRef.update(
+                                        "Stock",
+                                        view.findViewById<TextInputEditText>(R.id.p_qty).text.toString()
+                                    ).addOnSuccessListener {
+                                        get_data()
+                                        custom_snackbar("${product[position].ItemName} Updated Successfully")
+                                        Log.d("D_CHECK", "onItemLongClick: Updated")
+                                    }.addOnFailureListener {
+                                        Log.d("D_CHECK", "onItemLongClick: ${it.message}")
+                                    }
+                                }
+                                Log.d("D_CHECK", "onItemLongClick: ${it}")
+                            }.addOnFailureListener {
+                                Log.d("D_CHECK", "onItemLongClick: ${it.message}")
+                            }
+                        dialog.dismiss()
+                    }
+                }.show()
+            }
+
+        })
+    }
+
+    private fun sort_data(sortDetails: Int) {
+
+        fs = FirebaseFirestore.getInstance()
+        fs.collection("Product").document(auth.currentUser?.uid!!).collection("MyProduct")
+            .whereEqualTo("InventoryId", inventory_id).get().addOnSuccessListener {
+
+                product.clear()
+                for (data in it) {
+                    val r = data.toObject(inv_itemsItem::class.java)
+                    product.add(r)
+                }
+                when (sortDetails) {
+                    1 -> {
+                        product.sortBy { it.Category }
+                    }
+
+                    2 -> {
+                        product.sortBy { it.CreatedAt }
+                    }
+
+                    3 -> {
+                        product.sortBy { it.ItemName }
+                    }
+
+                    4 -> {
+                        product.sortBy { it.Stock }
+                    }
+                }
+                load_data(product)
+
+            }
     }
 
     private fun checkpermissionRead() = ActivityCompat.checkSelfPermission(

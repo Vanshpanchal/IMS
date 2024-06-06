@@ -40,7 +40,6 @@
             android:id="@+id/P_img"
             android:layout_width="130dp"
             android:layout_height="130dp"
-            android:background="@drawable/custom_bg"
             app:layout_constraintEnd_toEndOf="parent"
             android:src="@drawable/add_photo_alternate_20px"
             android:layout_marginTop="15dp"

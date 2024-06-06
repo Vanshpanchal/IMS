@@ -6,22 +6,15 @@
         <item name="colorOnPrimary">@color/blue</item>
         <item name="colorSecondaryContainer">@color/blue</item>
         <item name="colorOnSurface">@color/blue</item>
-        <item name="colorContainer">@color/blue</item>
-        <item name="android:statusBarColor" >@color/blue</item>
+        <item name="android:statusBarColor">@color/blue</item>
     </style>
 
 
     <style name="NoRippleEffect">
         <item name="android:selectableItemBackground">@android:color/transparent</item>
     </style>
+
     <style name="Theme.Ims" parent="Base.Theme.Ims" />
-    <style name="Widget.App.Button.OutlinedButton.IconOnly" parent="Widget.Material3.Button.OutlinedButton">
-        <item name="iconPadding">0dp</item>
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
-        <item name="android:paddingLeft">12dp</item>
-        <item name="android:paddingRight">12dp</item>
-        <item name="android:minWidth">48dp</item>
-        <item name="android:minHeight">48dp</item>
-    </style>
+
+
 </resources>
