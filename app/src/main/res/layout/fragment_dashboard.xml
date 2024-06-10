@@ -177,7 +177,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/all_item_groups"
+                android:text="Items Notify"
                 android:textSize="18sp"
                 android:paddingVertical="5dp"
                 android:textColor="@color/black"/>
@@ -197,6 +197,7 @@
             android:paddingHorizontal="15dp"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/low_stock_items"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
@@ -205,6 +206,7 @@
                 android:paddingVertical="5dp"
                 android:textColor="@color/red"/>
             <TextView
+                android:id="@+id/total_notify"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="5"
@@ -213,6 +215,7 @@
                 android:paddingVertical="5dp"
                 android:textColor="@color/black"/>
             <TextView
+                android:id="@+id/total_items"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="5"
