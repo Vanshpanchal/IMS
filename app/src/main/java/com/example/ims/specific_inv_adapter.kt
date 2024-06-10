@@ -1,5 +1,6 @@
 package com.example.ims
 
+import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
@@ -89,6 +91,21 @@ class specific_inv_adapter(private val items: ArrayList<inv_itemsItem>) :
         holder.inventory_name.text = item.Category
         holder.quantity_left.text = "#" + item.Stock.toString()
         holder.product_no.text = p_no.toString() + "."
+        if (item.Stock?.toInt()!! < item.LowStock!!.toInt()) {
+            holder.quantity_left.setTextColor(
+                ContextCompat.getColor(
+                    holder.itemView.context,
+                    R.color.red
+                )
+            )
+        } else {
+            holder.quantity_left.setTextColor(
+                ContextCompat.getColor(
+                    holder.itemView.context,
+                    R.color.green
+                )
+            )
+        }
 
     }
 

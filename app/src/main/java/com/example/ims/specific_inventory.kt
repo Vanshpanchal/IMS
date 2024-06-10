@@ -3,6 +3,11 @@ package com.example.ims
 import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.app.Dialog
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -17,6 +22,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
@@ -24,6 +30,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.toolbox.Volley
@@ -38,6 +46,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -58,7 +67,7 @@ class specific_inventory : Fragment() {
     lateinit var inventory_id: String
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
-
+    private lateinit var pendingIntent: PendingIntent
     private lateinit var sharedPreferences_1: SharedPreferences
     private lateinit var editor_1: SharedPreferences.Editor
     private lateinit var sr: StorageReference
@@ -91,6 +100,7 @@ class specific_inventory : Fragment() {
                     Log.d("D_CHECK", "Product Image Not Uploaded ")
                     dialog.dismiss()
                 }
+
 //                imageUri = result.data?.data
 //                LoadImg(add_dailog, result.data?.data!!)
 
@@ -128,6 +138,12 @@ class specific_inventory : Fragment() {
             requireContext().getSharedPreferences("FOOD", AppCompatActivity.MODE_PRIVATE)
         editor_1 = sharedPreferences_1.edit()
         get_data()
+//        if (product.size != 0) {
+//            monitorStock()
+//        }
+//        for (i in 1..5) {
+//            showNotification("Hello${1}", "World")
+//        }
 
 
         binding.toggleButton.addOnButtonCheckedListener { toggleButton, checkedId, isChecked ->
@@ -162,7 +178,8 @@ class specific_inventory : Fragment() {
                     "InventoryId" to inventory_id,
                     "ProductId" to imageUri.lastPathSegment.toString(),
                     "Category" to add_dailog.findViewById<TextView>(R.id.P_category).text.toString(),
-                    "CreatedAt" to Timestamp.now().toDate()
+                    "CreatedAt" to Timestamp.now().toDate(),
+                    "LowStock" to "-1"
                 )
 
 
@@ -256,6 +273,45 @@ class specific_inventory : Fragment() {
                 previewDialog.show()
                 previewDialog.setCancelable(true)
                 previewDialog.setCanceledOnTouchOutside(true)
+                val notifyBtn = view.findViewById<ImageButton>(R.id.notify)
+                val notifyview =
+                    View.inflate(requireContext(), R.layout.edit_dialog, null)
+                notifyBtn.setOnClickListener {
+                    MaterialAlertDialogBuilder(requireContext()).apply {
+                        setView(notifyview)
+                        notifyview.findViewById<TextView>(R.id.tvmsg).text = "Notify Low Stock"
+                        notifyview.findViewById<TextView>(R.id.textView).text = "Stock Alert For ${product[position].ItemName}"
+                        notifyview.findViewById<TextInputLayout>(R.id.layout_3).hint = "Alert Stock"
+                        notifyview.findViewById<TextInputEditText>(R.id.p_qty).text = Editable.Factory.getInstance().newEditable(product[position].LowStock)
+                        previewDialog.dismiss()
+                        setPositiveButton("Save") { dialog, which ->
+                            fs.collection("Product").document(auth.currentUser?.uid!!)
+                                .collection("MyProduct")
+                                .whereEqualTo("ProductId", product[position].ProductId).get()
+                                .addOnSuccessListener {
+                                    for (doc in it) {
+                                        val docRef = doc.reference
+                                        val qty = notifyview.findViewById<TextInputEditText>(R.id.p_qty).text.toString().toInt()
+                                        docRef.update(
+                                            "LowStock",
+                                            notifyview.findViewById<TextInputEditText>(R.id.p_qty).text.toString()
+                                        ).addOnSuccessListener {
+                                            get_data()
+                                            custom_snackbar("Stock Alert For ${product[position].ItemName} Updated Successfully")
+                                            monitorStock()
+                                            Log.d("D_CHECK", "onItemLongClick: Updated")
+                                        }.addOnFailureListener {
+                                            Log.d("D_CHECK", "onItemLongClick: ${it.message}")
+                                        }
+                                    }
+                                    Log.d("D_CHECK", "onItemLongClick: ${it}")
+                                }.addOnFailureListener {
+                                    Log.d("D_CHECK", "onItemLongClick: ${it.message}")
+                                }
+                            dialog.dismiss()
+                        }
+                    }.show()
+                }
                 val imageUrl = "----"
                 view.findViewById<TextView>(R.id.product_name).text = product[position].ItemName
                 view.findViewById<TextView>(R.id.product_unit).text =
@@ -336,6 +392,7 @@ class specific_inventory : Fragment() {
                                     ).addOnSuccessListener {
                                         get_data()
                                         custom_snackbar("${product[position].ItemName} Updated Successfully")
+                                        monitorStock()
                                         Log.d("D_CHECK", "onItemLongClick: Updated")
                                     }.addOnFailureListener {
                                         Log.d("D_CHECK", "onItemLongClick: ${it.message}")
@@ -516,5 +573,81 @@ class specific_inventory : Fragment() {
         bar.setActionTextColor(resources.getColor(R.color.blue3))
         bar.show()
     }
+
+    private fun showNotification(title: String, message: String) {
+        val notificationManager =
+            requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationId = System.currentTimeMillis().toInt()
+        // Create an intent for the activity you want to open when the notification is clicked
+        val intent = Intent(requireContext(), MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        // You can add extras to the intent if you need to pass data to the activity
+
+        val pendingIntent = PendingIntent.getActivity(
+            requireContext(),
+            0,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelId = "my_channel_id"
+            val channel =
+                NotificationChannel(channelId, "My Channel", NotificationManager.IMPORTANCE_DEFAULT)
+            notificationManager.createNotificationChannel(channel)
+
+            val notification = NotificationCompat.Builder(requireContext(), channelId)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setSmallIcon(R.drawable.logistics)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_STATUS)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent) // Attach the pending intent to the notification
+                .build()
+
+            notificationManager.notify(notificationId, notification)
+        } else {
+            val notification = NotificationCompat.Builder(requireContext())
+                .setContentTitle(title)
+                .setContentText(message)
+                .setSmallIcon(R.drawable.logistics)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_STATUS)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent) // Attach the pending intent to the notification
+                .build()
+
+            notificationManager.notify(notificationId, notification)
+        }
+    }
+
+    private fun monitorStock() {
+        val stockRef =
+            fs.collection("Product").document(auth.currentUser?.uid!!).collection("MyProduct")
+
+        stockRef.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.w("D_CHECK", "Listen failed", e)
+                return@addSnapshotListener
+            }
+            if (snapshot != null && !snapshot.isEmpty) {
+                for (doc in snapshot.documents) {
+                    val stock = doc.toObject(inv_itemsItem::class.java)
+                    if (stock != null && stock.Stock!!.toInt() < stock.LowStock!!.toInt()) {
+                        // If stock is below 5, call showNotification function
+                        showNotification(
+                            "Low Stock Alert",
+                            "Stock for ${stock.ItemName} is below ${stock.LowStock}"
+                        )
+                    }
+                }
+            } else {
+                Log.d("Hello", "No stock data")
+            }
+        }
+    }
+
+
 }
 

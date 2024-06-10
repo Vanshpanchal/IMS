@@ -1,12 +1,19 @@
 package com.example.ims
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -35,7 +42,7 @@ class MainActivity : AppCompatActivity() {
                 .commit()
         }
         val user = "sadmin"
-
+//        showNotification("hello", "World")
         val bottomnav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         if (user != "admin") {
             bottomnav.menu.findItem(R.id.item_4).setIcon(R.drawable.pin_drop_24px)
@@ -106,6 +113,48 @@ class MainActivity : AppCompatActivity() {
 //        }
 //    }
 
+    private fun showNotification(title: String, message: String) {
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationId = System.currentTimeMillis().toInt()
+        // Create an intent for the activity you want to open when the notification is clicked
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        // You can add extras to the intent if you need to pass data to the activity
 
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelId = "my_channel_id"
+            val channel =
+                NotificationChannel(channelId, "My Channel", NotificationManager.IMPORTANCE_DEFAULT)
+            notificationManager.createNotificationChannel(channel)
+
+            val notification = NotificationCompat.Builder(this, channelId)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setSmallIcon(R.drawable.notification_add_24px)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent) // Attach the pending intent to the notification
+                .build()
+
+            notificationManager.notify(notificationId, notification)
+        } else {
+            val notification = NotificationCompat.Builder(this)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setSmallIcon(R.drawable.notification_add_24px)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent) // Attach the pending intent to the notification
+                .build()
+
+            notificationManager.notify(notificationId, notification)
+        }
+    }
 }
 

@@ -9,6 +9,7 @@ data class inv_itemsItem(
     val PricePerUnit: String? = null,
     val ProductId: String? = null,
     val Stock: String? = null,
-    val CreatedAt: Timestamp? = null
+    val CreatedAt: Timestamp? = null,
+    val LowStock : String? = null
 
 )

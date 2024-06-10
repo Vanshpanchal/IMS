@@ -1,16 +1,30 @@
 package com.example.ims
 
+import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.navigation.ui.AppBarConfiguration
 import com.example.ims.databinding.ActivityHomeBinding
+import com.google.firebase.messaging.FirebaseMessaging
 
 class Home_act : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityHomeBinding
-    val Emulator_URL  = "http://10.0.2.2:8000"
+    private val channelId = "ID"
+    private val channelName = "Name"
+
+    val Emulator_URL = "http://10.0.2.2:8000"
     val Device_URL = "http://ip-address-of-laptop:8080"  // ip-address on Laptop
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,6 +32,8 @@ class Home_act : AppCompatActivity() {
 
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+//        showNotification("hello","World")
 
         binding.signIn.setOnClickListener {
             val intent = Intent(this, SigninAct::class.java)
@@ -30,6 +46,8 @@ class Home_act : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
+
         // API
 //        val gson = GsonBuilder().setLenient().create()
 //        val retrofitBuilder = Retrofit.Builder()
@@ -101,4 +119,18 @@ class Home_act : AppCompatActivity() {
 
 
     }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel =
+                NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
+
+            val notificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+
 }

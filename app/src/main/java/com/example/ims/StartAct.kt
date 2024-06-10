@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -25,15 +26,16 @@ class StartAct : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityStartBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+//        enableEdgeToEdge()
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+//            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+//            insets
+//        }
         installSplashScreen()
-
+//        val serviceIntent = Intent(this, StockMonitorService::class.java)
+//        ContextCompat.startForegroundService(this, serviceIntent)
         if (!isInternetAvailable()) {
             binding.animationView.visibility = View.GONE
             showNoInternetDialog()
@@ -101,6 +103,7 @@ class StartAct : AppCompatActivity() {
                 Log.d("hello", "onCreate: ${it.message} ")
             }
     }
+
     private fun sendEmailVerification() {
         val user = auth.currentUser
 
@@ -131,6 +134,7 @@ class StartAct : AppCompatActivity() {
                 bar.show()
             }
     }
+
     private fun isInternetAvailable(): Boolean {
         val connectivityManager =
             getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -138,6 +142,7 @@ class StartAct : AppCompatActivity() {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected
 //        return false
     }
+
     private fun showNoInternetDialog() {
         MaterialAlertDialogBuilder(this@StartAct)
             .setTitle("No Internet Connection")
