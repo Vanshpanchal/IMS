@@ -17,18 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/notify"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="25dp"
-        android:backgroundTint="@color/blue3"
-        android:contentDescription="@string/notify"
-        android:src="@drawable/notification_add_24px"
-        app:layout_constraintBottom_toTopOf="@+id/P_img"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2"
-        app:tint="@color/black" />
 
     <TextView
         android:id="@+id/textView"
@@ -50,10 +38,10 @@
         android:layout_height="130dp"
         android:layout_marginTop="15dp"
         android:scaleType="centerCrop"
-        tools:src="@drawable/add_photo_alternate_20px"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:src="@drawable/add_photo_alternate_20px" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -240,5 +228,82 @@
             android:textSize="16sp" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/linearLayout15"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8sp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
+        android:padding="2dp"
+        android:weightSum="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout8">
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/delete"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8sp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/red"
+            android:text="Delete"
+            android:textColor="@color/white"
+            app:cornerRadius="8dp"
+            app:icon="@drawable/delete_24px"
+            app:iconTint="@color/white"
+            app:layout_constraintStart_toStartOf="@+id/linearLayout6"
+            tools:layout_editor_absoluteY="365dp" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/notify"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8sp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/green"
+            android:text="Notify"
+            android:textColor="@color/white"
+            app:cornerRadius="8dp"
+            app:icon="@drawable/notification_add_24px"
+            app:iconTint="@color/white"
+            app:layout_constraintStart_toStartOf="@+id/linearLayout6"
+            tools:layout_editor_absoluteY="365dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8sp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:padding="2dp"
+        android:weightSum="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout15">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/remove_notify"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8sp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/black"
+            android:text="Remove Alert"
+            android:textColor="@color/white"
+            app:cornerRadius="8dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:icon="@drawable/notifications_off_24px"
+            app:iconTint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout15" />
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

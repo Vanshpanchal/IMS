@@ -46,18 +46,35 @@ class SigninAct : AppCompatActivity() {
             }
         }
 
-        binding.bSignIn.setOnClickListener{
+        binding.bSignIn.setOnClickListener {
             val intent = Intent(this, Home_act::class.java)
             startActivity(intent)
         }
 
         binding.LoginBtn.setOnClickListener {
 //            signIn("visualcode780@gmail.com", "123456789")
-            signIn(binding.email.text.toString(), binding.password.text.toString())
+            if (binding.email.text.toString().isNotBlank() && binding.password.text.toString()
+                    .isNotBlank()
+            ) {
+                signIn(binding.email.text.toString(), binding.password.text.toString())
+            } else {
+                custom_snackbar("Enter Proper Credentials")
+            }
 //            api_login()
         }
 
     }
+
+    private fun custom_snackbar(message: String) {
+        val bar = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
+        bar.setBackgroundTint(resources.getColor(R.color.blue))
+        bar.setAction("OK") {
+            bar.dismiss()
+        }
+        bar.setActionTextColor(resources.getColor(R.color.blue3))
+        bar.show()
+    }
+
 
     private fun resetPassword(email: String) {
         auth.sendPasswordResetEmail(email).addOnCompleteListener {
@@ -78,6 +95,7 @@ class SigninAct : AppCompatActivity() {
             }
         }
     }
+
     private fun signIn(email: String, pass: String) {
         auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener {
             val user = auth.currentUser

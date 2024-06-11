@@ -273,16 +273,47 @@ class specific_inventory : Fragment() {
                 previewDialog.show()
                 previewDialog.setCancelable(true)
                 previewDialog.setCanceledOnTouchOutside(true)
-                val notifyBtn = view.findViewById<ImageButton>(R.id.notify)
+                if (product[position].LowStock?.toInt() != -1) {
+                    view.findViewById<Button>(R.id.remove_notify).visibility = View.VISIBLE
+                }
+                view.findViewById<Button>(R.id.remove_notify).setOnClickListener {
+                    fs.collection("Product").document(auth.currentUser?.uid!!)
+                        .collection("MyProduct")
+                        .whereEqualTo("ProductId", product[position].ProductId).get()
+                        .addOnSuccessListener {
+                            for (doc in it) {
+                                val docRef = doc.reference
+
+                                docRef.update(
+                                    "LowStock",
+                                    "-1"
+                                ).addOnSuccessListener {
+                                    get_data()
+                                    custom_snackbar("Stock Alert For ${product[position].ItemName} Updated Successfully")
+                                    monitorStock()
+                                    Log.d("D_CHECK", "onItemLongClick: Updated")
+                                    previewDialog.dismiss()
+                                }.addOnFailureListener {
+                                    Log.d("D_CHECK", "onItemLongClick: ${it.message}")
+                                }
+                            }
+                            Log.d("D_CHECK", "onItemLongClick: ${it}")
+                        }.addOnFailureListener {
+                            Log.d("D_CHECK", "onItemLongClick: ${it.message}")
+                        }
+                }
+                val notifyBtn = view.findViewById<Button>(R.id.notify)
                 val notifyview =
                     View.inflate(requireContext(), R.layout.edit_dialog, null)
                 notifyBtn.setOnClickListener {
                     MaterialAlertDialogBuilder(requireContext()).apply {
                         setView(notifyview)
                         notifyview.findViewById<TextView>(R.id.tvmsg).text = "Notify Low Stock"
-                        notifyview.findViewById<TextView>(R.id.textView).text = "Stock Alert For ${product[position].ItemName}"
+                        notifyview.findViewById<TextView>(R.id.textView).text =
+                            "Stock Alert For ${product[position].ItemName}"
                         notifyview.findViewById<TextInputLayout>(R.id.layout_3).hint = "Alert Stock"
-                        notifyview.findViewById<TextInputEditText>(R.id.p_qty).text = Editable.Factory.getInstance().newEditable(product[position].LowStock)
+                        notifyview.findViewById<TextInputEditText>(R.id.p_qty).text =
+                            Editable.Factory.getInstance().newEditable(product[position].LowStock)
                         previewDialog.dismiss()
                         setPositiveButton("Save") { dialog, which ->
                             fs.collection("Product").document(auth.currentUser?.uid!!)
@@ -291,7 +322,9 @@ class specific_inventory : Fragment() {
                                 .addOnSuccessListener {
                                     for (doc in it) {
                                         val docRef = doc.reference
-                                        val qty = notifyview.findViewById<TextInputEditText>(R.id.p_qty).text.toString().toInt()
+                                        val qty =
+                                            notifyview.findViewById<TextInputEditText>(R.id.p_qty).text.toString()
+                                                .toInt()
                                         docRef.update(
                                             "LowStock",
                                             notifyview.findViewById<TextInputEditText>(R.id.p_qty).text.toString()
@@ -311,6 +344,47 @@ class specific_inventory : Fragment() {
                             dialog.dismiss()
                         }
                     }.show()
+                }
+
+                val deleteBtn = view.findViewById<Button>(R.id.delete)
+                deleteBtn.setOnClickListener {
+                    MaterialAlertDialogBuilder(
+                        requireContext(),
+                    )
+                        .setTitle("Remove Product")
+                        .setIcon(R.drawable.product)
+                        .setMessage("Are you sure you want to remove ${product[position].ItemName}?")
+                        .setPositiveButton("Yes") { dialog, which ->
+                            sr = FirebaseStorage.getInstance()
+                                .getReference("Product/" + auth.currentUser?.uid)
+                                .child("Inv${inventory_id}_Product${product[position].ProductId}")
+                            sr.delete()
+
+//                        val product_ID = product[position]
+                            fs.collection("Product").document(auth.currentUser?.uid!!)
+                                .collection("MyProduct")
+                                .whereEqualTo("ProductId", product[position].ProductId).get()
+                                .addOnSuccessListener {
+                                    for (doc in it) {
+                                        val docRef = doc.reference
+                                        docRef.delete().addOnSuccessListener {
+                                            get_data()
+                                            Log.d("D_CHECK", "onItemLongClick: Deleted")
+                                        }.addOnFailureListener {
+                                            Log.d("D_CHECK", "onItemLongClick: ${it.message}")
+                                        }
+                                    }
+                                    Log.d("D_CHECK", "onItemLongClick: ${it}")
+                                }.addOnFailureListener {
+                                    Log.d("D_CHECK", "onItemLongClick: ${it.message}")
+                                }
+
+                            dialog.dismiss()
+                        }
+                        .setNegativeButton("No") { dialog, which ->
+                            dialog.dismiss()
+                        }
+                        .show();
                 }
                 val imageUrl = "----"
                 view.findViewById<TextView>(R.id.product_name).text = product[position].ItemName

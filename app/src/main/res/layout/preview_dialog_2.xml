@@ -319,8 +319,11 @@
             android:text="Delete"
             android:layout_weight="1"
             android:textColor="@color/white"
+            app:icon="@drawable/delete_24px"
+            app:iconTint="@color/white"
             app:cornerRadius="8dp"
             android:layout_marginHorizontal="8sp"
+            android:backgroundTint="@color/red"
             app:layout_constraintStart_toStartOf="@+id/linearLayout6"
             tools:layout_editor_absoluteY="365dp" />
 
@@ -329,7 +332,10 @@
             android:id="@+id/locate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            app:icon="@drawable/pin_drop_24px"
+            app:iconTint="@color/white"
             android:text="Locate"
+            android:backgroundTint="@color/green"
             android:layout_weight="1"
             android:layout_marginHorizontal="8sp"
             android:textColor="@color/white"

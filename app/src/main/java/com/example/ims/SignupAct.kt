@@ -28,6 +28,8 @@ class SignupAct : AppCompatActivity() {
 
         binding.SignupBtn.setOnClickListener {
 //            signUpUser("visualcode780@gmail.com", "123456789")
+            if(binding.username.text.toString().isNotBlank() && binding.email.text.toString().isNotEmpty() && binding.password.text.toString()
+                    .isNotEmpty())
             signUpUser(binding.email.text.toString(), binding.password.text.toString())
 //            finish()
 //            finish()

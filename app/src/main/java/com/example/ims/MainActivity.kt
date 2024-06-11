@@ -41,6 +41,8 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.Frame, dashboard())
                 .commit()
         }
+
+
         val user = "sadmin"
 //        showNotification("hello", "World")
         val bottomnav = findViewById<BottomNavigationView>(R.id.bottom_navigation)

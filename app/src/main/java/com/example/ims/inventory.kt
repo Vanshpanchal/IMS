@@ -102,28 +102,38 @@ class inventory : Fragment() {
 
             view.findViewById<Button>(R.id.submit_btn).setOnClickListener {
 
-                val inventoryInfo = hashMapOf(
-                    "InventoryName" to view.findViewById<TextInputEditText>(R.id.i_name).text.toString(),
-                    "Country" to view.findViewById<TextInputEditText>(R.id.country).text.toString(),
-                    "MobileNo" to view.findViewById<TextInputEditText>(R.id.mobile_no).text.toString(),
-                    "Address" to view.findViewById<TextInputEditText>(R.id.address).text.toString(),
-                    "InventoryOwner" to view.findViewById<TextInputEditText>(R.id.i_owner).text.toString(),
-                    "CreatedAt" to Timestamp.now().toDate(),
+                if (view.findViewById<TextInputEditText>(R.id.i_name).text.toString()
+                        .isNotEmpty() && view.findViewById<TextInputEditText>(R.id.country).text.toString()
+                        .isNotEmpty() && view.findViewById<TextInputEditText>(R.id.mobile_no).text.toString()
+                        .isNotEmpty() && view.findViewById<TextInputEditText>(R.id.address).text.toString()
+                        .isNotEmpty() && view.findViewById<TextInputEditText>(R.id.i_owner).text.toString().isNotEmpty()
+                        ) {
 
-                    )
-                fs.collection("Inventory").document(auth.currentUser?.uid!!)
-                    .collection("MyInventory").document().set(inventoryInfo)
-                    .addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            custom_snackbar("Inventory Added")
-                            getInventory()
-                        } else {
-                            custom_snackbar("Error")
+
+                    val inventoryInfo = hashMapOf(
+                        "InventoryName" to view.findViewById<TextInputEditText>(R.id.i_name).text.toString(),
+                        "Country" to view.findViewById<TextInputEditText>(R.id.country).text.toString(),
+                        "MobileNo" to view.findViewById<TextInputEditText>(R.id.mobile_no).text.toString(),
+                        "Address" to view.findViewById<TextInputEditText>(R.id.address).text.toString(),
+                        "InventoryOwner" to view.findViewById<TextInputEditText>(R.id.i_owner).text.toString(),
+                        "CreatedAt" to Timestamp.now().toDate(),
+
+                        )
+                    fs.collection("Inventory").document(auth.currentUser?.uid!!)
+                        .collection("MyInventory").document().set(inventoryInfo)
+                        .addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                custom_snackbar("Inventory Added")
+                                getInventory()
+                            } else {
+                                custom_snackbar("Error")
+                            }
                         }
-                    }
-                Log.d("hello", "itemClickListener: $} ")
-                dialog.dismiss()
-
+                    Log.d("hello", "itemClickListener: $} ")
+                    dialog.dismiss()
+                }else{
+                    custom_snackbar("Enter Proper Credentials")
+                }
             }
             dialog.show()
         }

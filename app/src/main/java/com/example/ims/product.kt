@@ -223,7 +223,9 @@ class product : Fragment() {
                 view.findViewById<TextView>(R.id.product_unit).text = items[position].Stock
                 view.findViewById<TextView>(R.id.category).text = items[position].Category
                 view.findViewById<TextView>(R.id.P_id).text = items[position].ProductId
-                view.findViewById<TextView>(R.id.pp_unit).text = items[position].PricePerUnit
+                view.findViewById<TextView>(R.id.pp_unit).text = items[position].PricePerUnit+"/-"
+                view.findViewById<Button>(R.id.notify).visibility = View.GONE
+                view.findViewById<MaterialButton>(R.id.delete).visibility = View.GONE
 
             }
 
