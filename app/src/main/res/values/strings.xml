@@ -59,4 +59,6 @@
     <string name="inventory_n_management_n_system">Inventory \n Management \n System</string>
     <string name="notify">notify</string>
     <string name="edit_product">Edit Product</string>
+    <string name="profile">Profile</string>
+    <string name="users">Users</string>
 </resources>

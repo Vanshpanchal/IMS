@@ -17,6 +17,11 @@
     <item
         android:id="@+id/item_4"
         android:enabled="true"
-        android:icon="@drawable/settings_24px"
-        android:title="@string/setting"/>
+        android:icon="@drawable/pin_drop_24px"
+        android:title="@string/location"/>
+    <item
+        android:id="@+id/item_5"
+        android:enabled="true"
+        android:icon="@drawable/person_24px"
+        android:title="@string/profile"/>
 </menu>

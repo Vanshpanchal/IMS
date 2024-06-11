@@ -25,6 +25,7 @@ import com.example.ims.databinding.FragmentInventoryBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -56,6 +57,7 @@ class inventory : Fragment() {
     private lateinit var fs: FirebaseFirestore
     private var P_longitude = 0.0
     private var P_latitude = 0.0
+    private var isAdmin = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -71,8 +73,13 @@ class inventory : Fragment() {
         inventoryItems = arrayListOf()
         auth = FirebaseAuth.getInstance()
         fs = FirebaseFirestore.getInstance()
-        getInventory()
-        addressApi("Vadodara")
+//        val items = arrayOf("Item 1", "Item 2", "Item 3", "Item 4")
+//        (binding.textField.editText as? MaterialAutoCompleteTextView)?.setSimpleItems(items)
+//        getInventory()
+//        addressApi("Vadodara")
+        checkUser()
+
+
         val a = inventory_list("Inventory 1", "25-01-2023", "01", "Owner 1")
         val b = inventory_list("Inventory 8", "01-02-2023", "08", "Owner 2")
         val c = inventory_list("Inventory 7", "31-01-2023", "03", "Owner 3")
@@ -106,8 +113,9 @@ class inventory : Fragment() {
                         .isNotEmpty() && view.findViewById<TextInputEditText>(R.id.country).text.toString()
                         .isNotEmpty() && view.findViewById<TextInputEditText>(R.id.mobile_no).text.toString()
                         .isNotEmpty() && view.findViewById<TextInputEditText>(R.id.address).text.toString()
-                        .isNotEmpty() && view.findViewById<TextInputEditText>(R.id.i_owner).text.toString().isNotEmpty()
-                        ) {
+                        .isNotEmpty() && view.findViewById<TextInputEditText>(R.id.i_owner).text.toString()
+                        .isNotEmpty()
+                ) {
 
 
                     val inventoryInfo = hashMapOf(
@@ -124,14 +132,16 @@ class inventory : Fragment() {
                         .addOnCompleteListener {
                             if (it.isSuccessful) {
                                 custom_snackbar("Inventory Added")
-                                getInventory()
+                                checkUser()
+//                                getInventory()
+
                             } else {
                                 custom_snackbar("Error")
                             }
                         }
                     Log.d("hello", "itemClickListener: $} ")
                     dialog.dismiss()
-                }else{
+                } else {
                     custom_snackbar("Enter Proper Credentials")
                 }
             }
@@ -230,6 +240,31 @@ class inventory : Fragment() {
             }
     }
 
+    private fun s_getinventory() {
+        inventoryItems.clear()
+        fs.collection("Users").get().addOnSuccessListener {
+            for (data in it) {
+                Log.d("D_CHECK", "s_getinventory: ${data.id}")
+                fs.collection("Inventory").document(data.id).collection("MyInventory")
+                    .orderBy("CreatedAt", Query.Direction.ASCENDING)
+                    .get()
+                    .addOnSuccessListener { it ->
+                        val inventoryItemList = ArrayList<InventoryItems>()
+                        for (data in it) {
+
+                            val r = data.toObject(InventoryItems::class.java)
+                            r.InventoryID = data.id
+                            Log.d("D_CHECK", "getInventory: $r")
+                            inventoryItems.add(r)
+                        }
+                        updateUi(inventoryItems)
+                        Log.d("D_CHECK", "getInventory: $inventoryItems")
+                    }
+            }
+        }
+
+    }
+
     private fun custom_snackbar(message: String) {
         val bar = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
         bar.setBackgroundTint(resources.getColor(R.color.blue))
@@ -284,9 +319,11 @@ class inventory : Fragment() {
                                 .collection("MyInventory")
                                 .document(inv[position].InventoryID.toString())
                                 .delete().addOnSuccessListener {
+
                                     Log.d("D_CHECK", "onItemLongClick: Inventory Deleted")
                                     custom_snackbar("Inventory Deleted")
-                                    getInventory()
+//                                    getInventory()
+                                    checkUser()
                                 }
                         }
                         .setNegativeButton("No") { _, _ ->
@@ -444,5 +481,16 @@ class inventory : Fragment() {
 //        })
 //    }
 //
+
+    private fun checkUser() {
+        fs.collection("Users").document(auth.currentUser?.uid!!).get().addOnSuccessListener {
+            isAdmin = it.get("Admin") as Boolean
+            if (isAdmin) {
+                s_getinventory()
+            } else {
+                getInventory()
+            }
+        }
+    }
 
 }

@@ -21,11 +21,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.example.ims.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var bind: ActivityMainBinding
+    private lateinit var auth: FirebaseAuth
+    private lateinit var fs: FirebaseFirestore
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        enableEdgeToEdge()
@@ -42,14 +46,18 @@ class MainActivity : AppCompatActivity() {
                 .commit()
         }
 
-
+        auth = FirebaseAuth.getInstance()
+        fs = FirebaseFirestore.getInstance()
+        var isAdmin = false
+        fs.collection("Users").document(auth.currentUser?.uid!!).get().addOnSuccessListener {
+            isAdmin = it.data?.get("Admin") as Boolean
+        }
         val user = "sadmin"
 //        showNotification("hello", "World")
         val bottomnav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        if (user != "admin") {
+        if (isAdmin) {
             bottomnav.menu.findItem(R.id.item_4).setIcon(R.drawable.pin_drop_24px)
             bottomnav.menu.findItem(R.id.item_4).setTitle(R.string.location)
-
         }
         bottomnav.setOnItemSelectedListener {
             when (it.itemId) {
@@ -72,13 +80,11 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.item_4 -> {
-
-                    if (user == "admin") {
-
-                    } else {
                         replacefragement(MapsFragment(), "maps")
-                    }
-
+                    true
+                }
+                R.id.item_5->{
+                    replacefragement(ProfileFragment(), "profile")
                     true
                 }
 

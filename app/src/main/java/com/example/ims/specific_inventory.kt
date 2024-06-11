@@ -137,8 +137,10 @@ class specific_inventory : Fragment() {
         sharedPreferences_1 =
             requireContext().getSharedPreferences("FOOD", AppCompatActivity.MODE_PRIVATE)
         editor_1 = sharedPreferences_1.edit()
-        get_data()
+//        get_data()
+        checkUser()
 //        if (product.size != 0) {
+
 //            monitorStock()
 //        }
 //        for (i in 1..5) {
@@ -153,10 +155,10 @@ class specific_inventory : Fragment() {
                     R.id.Time -> sort_data(2)
                     R.id.Name -> sort_data(3)
                     R.id.Stock -> sort_data(4)
-                    else -> get_data()
+                    else -> checkUser() // get_data()
                 }
             } else {
-                get_data()
+                checkUser()//get_data()
             }
         }
         binding.addProduct.setOnClickListener {
@@ -179,14 +181,16 @@ class specific_inventory : Fragment() {
                     "ProductId" to imageUri.lastPathSegment.toString(),
                     "Category" to add_dailog.findViewById<TextView>(R.id.P_category).text.toString(),
                     "CreatedAt" to Timestamp.now().toDate(),
-                    "LowStock" to "-1"
+                    "LowStock" to "-1",
+                    "UserId" to auth.currentUser?.uid!!
                 )
 
 
                 fs.collection("Product").document(auth.currentUser?.uid!!).collection("MyProduct")
                     .document().set(product).addOnSuccessListener {
                         custom_snackbar("Product Added")
-                        get_data()
+//                        get_data()
+                        checkUser()
                     }.addOnFailureListener {
                         Log.d("D_CHECK", "onViewCreated: ${it.message}")
                     }
@@ -261,8 +265,9 @@ class specific_inventory : Fragment() {
         }
         specific_inv_adapter.onItem(object : specific_inv_adapter.onitemclick {
             override fun itemClickListener(position: Int) {
+
                 sr = FirebaseStorage.getInstance()
-                    .getReference("Product/" + auth.currentUser?.uid)
+                    .getReference("Product/" + product[position].UserId)
                     .child("Inv${inventory_id}_Product${product[position].ProductId}")
                 val view = View.inflate(requireContext(), R.layout.preview_dialog, null)
                 val imageView = view.findViewById<ImageView>(R.id.P_img)
@@ -288,7 +293,8 @@ class specific_inventory : Fragment() {
                                     "LowStock",
                                     "-1"
                                 ).addOnSuccessListener {
-                                    get_data()
+//                                    get_data()
+                                    checkUser()
                                     custom_snackbar("Stock Alert For ${product[position].ItemName} Updated Successfully")
                                     monitorStock()
                                     Log.d("D_CHECK", "onItemLongClick: Updated")
@@ -329,7 +335,8 @@ class specific_inventory : Fragment() {
                                             "LowStock",
                                             notifyview.findViewById<TextInputEditText>(R.id.p_qty).text.toString()
                                         ).addOnSuccessListener {
-                                            get_data()
+//                                            get_data()
+                                            checkUser()
                                             custom_snackbar("Stock Alert For ${product[position].ItemName} Updated Successfully")
                                             monitorStock()
                                             Log.d("D_CHECK", "onItemLongClick: Updated")
@@ -368,7 +375,8 @@ class specific_inventory : Fragment() {
                                     for (doc in it) {
                                         val docRef = doc.reference
                                         docRef.delete().addOnSuccessListener {
-                                            get_data()
+//                                            get_data()
+                                            checkUser()
                                             Log.d("D_CHECK", "onItemLongClick: Deleted")
                                         }.addOnFailureListener {
                                             Log.d("D_CHECK", "onItemLongClick: ${it.message}")
@@ -420,7 +428,8 @@ class specific_inventory : Fragment() {
                                 for (doc in it) {
                                     val docRef = doc.reference
                                     docRef.delete().addOnSuccessListener {
-                                        get_data()
+//                                        get_data()
+                                        checkUser()
                                         Log.d("D_CHECK", "onItemLongClick: Deleted")
                                     }.addOnFailureListener {
                                         Log.d("D_CHECK", "onItemLongClick: ${it.message}")
@@ -464,7 +473,8 @@ class specific_inventory : Fragment() {
                                         "Stock",
                                         view.findViewById<TextInputEditText>(R.id.p_qty).text.toString()
                                     ).addOnSuccessListener {
-                                        get_data()
+//                                        get_data()
+                                        checkUser()
                                         custom_snackbar("${product[position].ItemName} Updated Successfully")
                                         monitorStock()
                                         Log.d("D_CHECK", "onItemLongClick: Updated")
@@ -722,6 +732,39 @@ class specific_inventory : Fragment() {
         }
     }
 
+    private fun s_getdata() {
+        fs.collection("Users").get().addOnSuccessListener {
+            product.clear()
+            for (data in it) {
+                Log.d("D_CHECK", "s_getinventory: ${data.id}")
+                Log.d("D_CHECK", "getInventory: $inventory_id")
+
+                fs = FirebaseFirestore.getInstance()
+                fs.collection("Product").document(data.id).collection("MyProduct")
+                    .whereEqualTo("InventoryId", inventory_id).get().addOnSuccessListener {
+                        for (data in it) {
+                            val r = data.toObject(inv_itemsItem::class.java)
+                            Log.d("D_CHECK", "getInventory: $r")
+                            product.add(r)
+                        }
+                        product.sortBy { it.CreatedAt }
+                        load_data(product)
+                    }
+            }
+        }
+
+    }
+
+    private fun checkUser() {
+        fs.collection("Users").document(auth.currentUser?.uid!!).get().addOnSuccessListener {
+            var isAdmin = it.get("Admin") as Boolean
+            if (isAdmin) {
+                s_getdata()
+            } else {
+                get_data()
+            }
+        }
+    }
 
 }
 

@@ -62,8 +62,8 @@ class product : Fragment() {
         auth = FirebaseAuth.getInstance()
         fs = FirebaseFirestore.getInstance()
         productList = arrayListOf()
-        get_data()
-
+//        get_data()
+checkUser()
         binding.toggleButton.addOnButtonCheckedListener { toggleButton, checkedId, isChecked ->
             if (isChecked) {
 //                clearIcons(toggleButton)
@@ -76,10 +76,11 @@ class product : Fragment() {
                     R.id.Time -> sort_data(2)
                     R.id.Name -> sort_data(3)
                     R.id.Stock -> sort_data(4)
-                    else -> get_data()
+                    else -> checkUser() //get_data()
                 }
             } else {
-                get_data()
+//                get_data()
+                checkUser()
 //                val unselectedButton = binding.toggleButton.findViewById<Button>(checkedId)
 //                unselectedButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
             }
@@ -202,7 +203,7 @@ class product : Fragment() {
                 Log.d("hello", "itemClickListener: ${position}")
                 val view = View.inflate(requireContext(), R.layout.preview_dialog, null)
                 sr = FirebaseStorage.getInstance()
-                    .getReference("Product/" + auth.currentUser?.uid)
+                    .getReference("Product/" + items[position].UserId)
                     .child("Inv${items[position].InventoryId}_Product${items[position].ProductId}")
 
                 view.findViewById<ImageView>(R.id.P_img).setPadding(0, 0, 0, 0)
@@ -223,7 +224,7 @@ class product : Fragment() {
                 view.findViewById<TextView>(R.id.product_unit).text = items[position].Stock
                 view.findViewById<TextView>(R.id.category).text = items[position].Category
                 view.findViewById<TextView>(R.id.P_id).text = items[position].ProductId
-                view.findViewById<TextView>(R.id.pp_unit).text = items[position].PricePerUnit+"/-"
+                view.findViewById<TextView>(R.id.pp_unit).text = items[position].PricePerUnit + "/-"
                 view.findViewById<Button>(R.id.notify).visibility = View.GONE
                 view.findViewById<MaterialButton>(R.id.delete).visibility = View.GONE
 
@@ -231,6 +232,36 @@ class product : Fragment() {
 
         })
 
+    }
+
+    private fun s_getdata() {
+        productList.clear()
+        fs.collection("Users").get().addOnSuccessListener {
+            for (data in it) {
+                Log.d("D_CHECK", "s_getinventory: ${data.id}")
+                fs.collection("Product").document(data.id).collection("MyProduct")
+                    .orderBy("CreatedAt", Query.Direction.DESCENDING).get().addOnSuccessListener {
+
+                        for (data in it) {
+                            val r = data.toObject(inv_itemsItem::class.java)
+                            productList.add(r)
+                        }
+                        updateUI(productList)
+
+                    }
+            }
+        }
+    }
+
+    private fun checkUser() {
+        fs.collection("Users").document(auth.currentUser?.uid!!).get().addOnSuccessListener {
+            var isAdmin = it.get("Admin") as Boolean
+            if (isAdmin) {
+                s_getdata()
+            } else {
+                get_data()
+            }
+        }
     }
 }
 
