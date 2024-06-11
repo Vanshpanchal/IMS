@@ -24,10 +24,14 @@ import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRe
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MapsFragment : Fragment() {
     private lateinit var mMap: GoogleMap
     private lateinit var placesClient: PlacesClient
+    private lateinit var fs: FirebaseFirestore
+    private lateinit var auth: FirebaseAuth
     private val callback = OnMapReadyCallback { googleMap ->
         /**
          * Manipulates the map once available.
@@ -37,15 +41,15 @@ class MapsFragment : Fragment() {
          * If Google Play services is not installed on the device, the user will be prompted to
          * install it inside the SupportMapFragment. This method will only be triggered once the
          * user has installed Google Play services and returned to the app.
-         */
-        val sydney = LatLng(20.5937, 78.9629)
-        googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in India"))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
-
-        val sydney2 = LatLng(-37.8142, 144.9631)
-        googleMap.addMarker(MarkerOptions().position(sydney2).title("Marker in Sydney"))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney2))
-
+        //             */
+//            val sydney = LatLng(20.5937, 78.9629)
+//            googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in India"))
+//            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+//
+//            val sydney2 = LatLng(-37.8142, 144.9631)
+//            googleMap.addMarker(MarkerOptions().position(sydney2).title("Marker in Sydney"))
+//            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney2))
+        fetchCoordinatesAndAddMarkers(googleMap)
     }
 
     override fun onCreateView(
@@ -53,7 +57,8 @@ class MapsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        fs = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
         return inflater.inflate(R.layout.fragment_maps, container, false)
     }
 
@@ -65,6 +70,30 @@ class MapsFragment : Fragment() {
 
     }
 
+    private fun fetchCoordinatesAndAddMarkers(googleMap: GoogleMap) {
+        fs.collection("Cordinates").document(auth.currentUser?.uid!!).collection("MyCordinates")
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    val lat = document.getDouble("Latitude") ?: 0.0
+                    val lng = document.getDouble("Longitude") ?: 0.0
+                    val position = LatLng(lat, lng)
+                    val marker = document.data.get("Address").toString()
+                    googleMap.addMarker(MarkerOptions().position(position).title(marker))
+                }
+                // Optionally move the camera to the last marker
+                if (!documents.isEmpty) {
+                    val lastPosition = LatLng(
+                        documents.last().getDouble("Latitude") ?: 0.0,
+                        documents.last().getDouble("Longitude") ?: 0.0
+                    )
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(lastPosition))
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("MapsFragment", "Error getting documents: ", exception)
+            }
+    }
 
 
 }

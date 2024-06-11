@@ -141,7 +141,7 @@ class inventory : Fragment() {
     private fun addressApi(Address: String) {
         var cordinates = listOf<Double>()
         val url =
-            "https://api.geoapify.com/v1/geocode/search?text=$Address vadodara&apiKey=a4df04f3e2154cafbf08d57831558743"
+            "https://api.geoapify.com/v1/geocode/search?text=$Address&apiKey=a4df04f3e2154cafbf08d57831558743"
         val stringRequest = StringRequest(
             Request.Method.GET, url,
             { response ->
@@ -156,19 +156,33 @@ class inventory : Fragment() {
 //                val longitudes = mutableListOf<Double>()
 
 
-                for (i in 0 until featuresArray.length()) {
-                    val feature = featuresArray.getJSONObject(i)
-                    val geometry = feature.getJSONObject("geometry")
-                    val coordinates = geometry.getJSONArray("coordinates")
-                    if (coordinates.length() >= 2) {
-                        longitude = coordinates.getDouble(0)
-                        latitude = coordinates.getDouble(1)
-                        P_longitude = longitude
-                        P_latitude = latitude
-                    }
+//                for (i in 0 until featuresArray.length()) {
+                val feature = featuresArray.getJSONObject(0)
+                val geometry = feature.getJSONObject("geometry")
+                val coordinates = geometry.getJSONArray("coordinates")
+                if (coordinates.length() >= 2) {
+                    longitude = coordinates.getDouble(0)
+                    latitude = coordinates.getDouble(1)
+                    P_longitude = longitude
+                    P_latitude = latitude
+//                    }
                 }
                 Log.d("D_CHECK", "addressApi: ${longitude}  $latitude}")
-
+                fs = FirebaseFirestore.getInstance()
+                val cordinates = hashMapOf(
+                    "Longitude" to P_longitude,
+                    "Latitude" to P_latitude,
+                    "Address" to Address
+                )
+                fs.collection("Cordinates").document(auth.currentUser?.uid!!)
+                    .collection("MyCordinates").document().set(
+                        cordinates
+                    ).addOnSuccessListener {
+                        Log.d(
+                            "D_CHECK",
+                            "Successfully added to firestore addressApi: ${cordinates}"
+                        )
+                    }
 // Cordinates
 //                Log.d("D_CHECK", "addressApi: ${cordinates}")
             },
@@ -250,6 +264,35 @@ class inventory : Fragment() {
                 previewDialog.setCancelable(true)
                 previewDialog.setCanceledOnTouchOutside(true)
 
+
+                view.findViewById<Button>(R.id.delete).setOnClickListener {
+                    MaterialAlertDialogBuilder(requireContext()).setTitle("Inventory Delete")
+                        .setMessage("Are You Sure You Want To Delete ${inv[position].InventoryName} Inventory")
+                        .setIcon(R.drawable.delete_forever_24px)
+                        .setPositiveButton("Yes") { _, _ ->
+                            fs.collection("Inventory").document(auth.currentUser?.uid!!)
+                                .collection("MyInventory")
+                                .document(inv[position].InventoryID.toString())
+                                .delete().addOnSuccessListener {
+                                    Log.d("D_CHECK", "onItemLongClick: Inventory Deleted")
+                                    custom_snackbar("Inventory Deleted")
+                                    getInventory()
+                                }
+                        }
+                        .setNegativeButton("No") { _, _ ->
+                            previewDialog.dismiss()
+                        }
+                        .show()
+                    previewDialog.dismiss()
+                }
+
+                view.findViewById<Button>(R.id.locate).setOnClickListener {
+                    val address = view.findViewById<TextView>(R.id.inv_address).text.toString()
+                    addressApi(address)
+                    val mapFragment = MapsFragment()
+                    (activity as? MainActivity)?.replacefragement(mapFragment, "specific_inventory")
+                    previewDialog.dismiss()
+                }
                 val date = inv[position].CreatedAt
 
                 val obj = date?.toDate()

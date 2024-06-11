@@ -18,7 +18,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
@@ -50,13 +49,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.8"
+            android:background="@drawable/bg_5"
             android:padding="8sp"
             android:paddingStart="5dp"
-            android:textStyle="bold"
-            android:background="@drawable/bg_5"
             android:text="@string/inventory_name"
             android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/inv_name"
@@ -87,14 +86,14 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_5"
-            android:text="Inventory Owner"
-            android:textColor="@color/black"
             android:layout_weight="0.8"
-            android:textStyle="bold"
+            android:background="@drawable/bg_5"
             android:padding="8sp"
             android:paddingStart="5dp"
-            android:textSize="16sp" />
+            android:text="Inventory Owner"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/inv_owner"
@@ -125,14 +124,14 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_5"
-            android:text="Created Date"
-            android:textStyle="bold"
             android:layout_weight="0.8"
+            android:background="@drawable/bg_5"
             android:padding="8sp"
             android:paddingStart="5dp"
+            android:text="Created Date"
             android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/created_date"
@@ -163,14 +162,14 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_5"
-            android:text="Inventory ID"
-            android:textColor="@color/black"
-            android:textStyle="bold"
             android:layout_weight="0.8"
+            android:background="@drawable/bg_5"
             android:padding="8sp"
             android:paddingStart="5dp"
-            android:textSize="16sp" />
+            android:text="Inventory ID"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/inv_id"
@@ -184,6 +183,7 @@
             android:textColor="@color/black"
             android:textSize="16sp" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/linearLayout6"
         android:layout_width="match_parent"
@@ -200,14 +200,14 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_5"
-            android:textStyle="bold"
-            android:text="Address"
-            android:textColor="@color/black"
             android:layout_weight="0.8"
+            android:background="@drawable/bg_5"
             android:padding="8sp"
             android:paddingStart="5dp"
-            android:textSize="16sp" />
+            android:text="Address"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/inv_address"
@@ -221,7 +221,6 @@
             android:textColor="@color/black"
             android:textSize="16sp" />
     </LinearLayout>
-
 
 
     <LinearLayout
@@ -238,16 +237,16 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout6">
 
         <TextView
-            android:textStyle="bold"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_5"
-            android:text="Mobile-No"
-            android:textColor="@color/black"
             android:layout_weight="0.8"
+            android:background="@drawable/bg_5"
             android:padding="8sp"
             android:paddingStart="5dp"
-            android:textSize="16sp" />
+            android:text="Mobile-No"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/inv_mobile"
@@ -261,6 +260,7 @@
             android:textColor="@color/black"
             android:textSize="16sp" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/linearLayout9"
         android:layout_width="match_parent"
@@ -277,15 +277,15 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="0.8"
             android:background="@drawable/bg_5"
+            android:padding="8sp"
+
+            android:paddingStart="5dp"
             android:text="Country"
             android:textColor="@color/black"
-
-            android:textStyle="bold"
-            android:layout_weight="0.8"
-            android:padding="8sp"
-            android:paddingStart="5dp"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/inv_country"
@@ -300,4 +300,41 @@
             android:textSize="16sp" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/linearLayout15"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8sp"
+        android:orientation="horizontal"
+        android:padding="2dp"
+        android:layout_marginTop="15dp"
+        android:weightSum="2"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout9"
+        tools:layout_editor_absoluteX="8dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/delete"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Delete"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            app:cornerRadius="8dp"
+            android:layout_marginHorizontal="8sp"
+            app:layout_constraintStart_toStartOf="@+id/linearLayout6"
+            tools:layout_editor_absoluteY="365dp" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/locate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Locate"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="8sp"
+            android:textColor="@color/white"
+            app:cornerRadius="8dp"
+            app:layout_constraintStart_toStartOf="@+id/linearLayout6"
+            tools:layout_editor_absoluteY="365dp" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
