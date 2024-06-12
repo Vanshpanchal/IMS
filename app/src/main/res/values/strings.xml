@@ -25,7 +25,7 @@
     <string name="login">Login</string>
     <string name="please_create_a_new_account">Please create a new account</string>
     <string name="username">Username</string>
-    <string name="logout">logout</string>
+    <string name="logout">Logout</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -61,4 +61,5 @@
     <string name="edit_product">Edit Product</string>
     <string name="profile">Profile</string>
     <string name="users">Users</string>
+    <string name="reset_password">Reset Password</string>
 </resources>
