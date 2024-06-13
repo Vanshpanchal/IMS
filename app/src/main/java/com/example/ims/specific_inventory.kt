@@ -30,7 +30,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material3.Tab
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
@@ -160,6 +159,10 @@ class specific_inventory : Fragment() {
             val filterDialog = BottomSheetDialog(requireContext())
             filterDialog.setContentView(R.layout.filterdialog)
 
+            filterDialog.findViewById<Button>(R.id.clear)?.setOnClickListener {
+                get_data()
+                filterDialog.dismiss()
+            }
             getCategoriesFromFirestore { categories ->
                 for (category in categories) {
                     val chip = Chip(requireContext())
@@ -194,36 +197,36 @@ class specific_inventory : Fragment() {
                 }
             }
 
-           if( filterDialog.findViewById<TabLayout>(R.id.tabLayout)?.selectedTabPosition == 0){
-               filterDialog.findViewById<Button>(R.id.show)?.setOnClickListener {
+            if (filterDialog.findViewById<TabLayout>(R.id.tabLayout)?.selectedTabPosition == 0) {
+                filterDialog.findViewById<Button>(R.id.show)?.setOnClickListener {
 //                   Log.d("D_CHECK", "onItemLongClick: ${tab.position}")
 
-                   fs = FirebaseFirestore.getInstance()
-                   fs.collection("Product").document(auth.currentUser?.uid!!)
-                       .collection("MyProduct")
-                       .whereEqualTo("InventoryId", inventory_id).get()
-                       .addOnSuccessListener {
-                           product.clear()
-                           for (data in it) {
-                               val r = data.toObject(inv_itemsItem::class.java)
-                               product.add(r)
-                           }
-                           val a =
-                               product.filter {
-                                   it.PricePerUnit?.toInt()!! > 0 &&
-                                           it.PricePerUnit?.toInt()!! <= filterDialog.findViewById<Slider>(
-                                       R.id.price_slider
-                                   )?.value?.toInt()!!
-                               }
+                    fs = FirebaseFirestore.getInstance()
+                    fs.collection("Product").document(auth.currentUser?.uid!!)
+                        .collection("MyProduct")
+                        .whereEqualTo("InventoryId", inventory_id).get()
+                        .addOnSuccessListener {
+                            product.clear()
+                            for (data in it) {
+                                val r = data.toObject(inv_itemsItem::class.java)
+                                product.add(r)
+                            }
+                            val a =
+                                product.filter {
+                                    it.PricePerUnit?.toInt()!! > 0 &&
+                                            it.PricePerUnit?.toInt()!! <= filterDialog.findViewById<Slider>(
+                                        R.id.price_slider
+                                    )?.value?.toInt()!!
+                                }
 //
-                           load_data(ArrayList(a))
-                           filterDialog.dismiss()
+                            load_data(ArrayList(a))
+                            filterDialog.dismiss()
 
-                       }.addOnFailureListener {
-                           Log.d("D_CHECK", "onItemLongClick: ${it.message}")
-                       }
-               }
-           }
+                        }.addOnFailureListener {
+                            Log.d("D_CHECK", "onItemLongClick: ${it.message}")
+                        }
+                }
+            }
             filterDialog.findViewById<TabLayout>(R.id.tabLayout)
                 ?.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                     override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -236,7 +239,33 @@ class specific_inventory : Fragment() {
                                     View.GONE
                                 filterDialog.findViewById<LinearLayout>(R.id.stock)?.visibility =
                                     View.GONE
+                                filterDialog.findViewById<Button>(R.id.show)?.setOnClickListener {
+                                    fs = FirebaseFirestore.getInstance()
+                                    fs.collection("Product").document(auth.currentUser?.uid!!)
+                                        .collection("MyProduct")
+                                        .whereEqualTo("InventoryId", inventory_id).get()
+                                        .addOnSuccessListener {
+                                            product.clear()
+                                            for (data in it) {
+                                                val r = data.toObject(inv_itemsItem::class.java)
+                                                product.add(r)
+                                            }
+                                            val selectedChipId =
+                                                filterDialog.findViewById<ChipGroup>(R.id.chipGroup)?.checkedChipId
+                                            val selectedChipText =
+                                                filterDialog.findViewById<Chip>(selectedChipId!!)?.text
+                                            Log.d("D_CHECK", "onTabSelected: $selectedChipText")
+                                            val a =
+                                                product.filter {
+                                                    it.Category.toString() == selectedChipText.toString()
+                                                }
+                                            load_data(ArrayList(a))
+                                            filterDialog.dismiss()
 
+                                        }.addOnFailureListener {
+                                            Log.d("D_CHECK", "onItemLongClick: ${it.message}")
+                                        }
+                                }
                             }
 
                             0 -> {
@@ -284,6 +313,34 @@ class specific_inventory : Fragment() {
                                     View.GONE
                                 filterDialog.findViewById<LinearLayout>(R.id.stock)?.visibility =
                                     View.VISIBLE
+                                filterDialog.findViewById<Button>(R.id.show)?.setOnClickListener {
+                                    Log.d("D_CHECK", "onItemLongClick: ${tab.position}")
+
+                                    fs = FirebaseFirestore.getInstance()
+                                    fs.collection("Product").document(auth.currentUser?.uid!!)
+                                        .collection("MyProduct")
+                                        .whereEqualTo("InventoryId", inventory_id).get()
+                                        .addOnSuccessListener {
+                                            product.clear()
+                                            for (data in it) {
+                                                val r = data.toObject(inv_itemsItem::class.java)
+                                                product.add(r)
+                                            }
+                                            val a =
+                                                product.filter {
+                                                    it.Stock?.toInt()!! > 0 &&
+                                                            it.Stock?.toInt()!! <= filterDialog.findViewById<Slider>(
+                                                        R.id.stock_slider
+                                                    )?.value?.toInt()!!
+                                                }
+//
+                                            load_data(ArrayList(a))
+                                            filterDialog.dismiss()
+
+                                        }.addOnFailureListener {
+                                            Log.d("D_CHECK", "onItemLongClick: ${it.message}")
+                                        }
+                                }
                             }
                         }
                     }
@@ -296,6 +353,15 @@ class specific_inventory : Fragment() {
 
                 })
 
+            filterDialog.findViewById<Slider>(R.id.price_slider)
+                ?.addOnChangeListener { slider, value, fromUser ->
+                    filterDialog.findViewById<TextView>(R.id.price_range_view)?.text = "0 to $value"
+                }
+            filterDialog.findViewById<Slider>(R.id.stock_slider)
+                ?.addOnChangeListener { slider, value, fromUser ->
+                    filterDialog.findViewById<TextView>(R.id.stock_range_view)?.text = "0 to $value"
+                }
+
 
             filterDialog.findViewById<Slider>(R.id.price_slider)
                 ?.setLabelFormatter { value: Float ->
@@ -305,6 +371,12 @@ class specific_inventory : Fragment() {
                     format.format(value.toDouble())
                 }
 
+            filterDialog.findViewById<Slider>(R.id.stock_slider)
+                ?.setLabelFormatter { value: Float ->
+                    val format = NumberFormat.getNumberInstance()
+                    format.maximumFractionDigits = 0
+                    format.format(value.toDouble())
+                }
 
             // Filter Category
 
@@ -996,10 +1068,6 @@ class specific_inventory : Fragment() {
             )
 
 
-
-            binding.apply {
-                chipGroup.addView(chip as View)
-            }
         }
 
     }

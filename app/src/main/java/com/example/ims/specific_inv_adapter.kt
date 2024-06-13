@@ -88,7 +88,7 @@ class specific_inv_adapter(private val items: ArrayList<inv_itemsItem>) :
         val item = items[position]
         val p_no = position + 1
         holder.product_title.text = item.ItemName
-        holder.inventory_name.text = item.Category
+        holder.inventory_name.text = item.PricePerUnit+"/-"
         holder.quantity_left.text = "#" + item.Stock.toString()
         holder.product_no.text = p_no.toString() + "."
         if (item.Stock?.toInt()!! < item.LowStock!!.toInt()) {
