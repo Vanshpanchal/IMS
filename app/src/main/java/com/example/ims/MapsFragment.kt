@@ -87,7 +87,7 @@ class MapsFragment : Fragment() {
                         documents.last().getDouble("Latitude") ?: 0.0,
                         documents.last().getDouble("Longitude") ?: 0.0
                     )
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(lastPosition))
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastPosition,8f))
                 }
             }
             .addOnFailureListener { exception ->

@@ -14,6 +14,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
@@ -78,6 +79,7 @@
             android:layout_height="wrap_content"
             android:text="Stock" />
     </com.google.android.material.button.MaterialButtonToggleGroup>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_inv_product"
         android:layout_width="match_parent"
@@ -98,4 +100,35 @@
         app:icon="@drawable/add_24px"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/filter_product"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:backgroundTint="@color/blue2"
+        android:layout_margin="25dp"
+        app:icon="@drawable/filter_alt_24px"
+        app:layout_constraintBottom_toTopOf="@+id/add_product"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.Material3.Chip.Assist.Elevated"
+        android:layout_marginTop="25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rv_inv_product">
+
+        <!-- Chips can be declared here, or added dynamically. -->
+        <com.google.android.material.chip.Chip
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            style="@style/Widget.Material3.Chip.Filter.Elevated"
+            android:text="Chip 1"
+            app:chipIcon="@drawable/notifications_off_24px"
+         />
+
+    </com.google.android.material.chip.ChipGroup>
 </androidx.constraintlayout.widget.ConstraintLayout>

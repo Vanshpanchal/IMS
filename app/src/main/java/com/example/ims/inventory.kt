@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.icu.text.SimpleDateFormat
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -102,10 +103,17 @@ class inventory : Fragment() {
                 .setView(view)
                 .create()
 
-            view.findViewById<ImageButton>(R.id.locate).setOnClickListener {
-                val address = view.findViewById<TextInputEditText>(R.id.address).text.toString()
-                addressApi(address)
+            fs.collection("Users").document(auth.currentUser?.uid!!).get().addOnSuccessListener {
+                view.findViewById<TextInputEditText>(R.id.i_owner).text =
+                    Editable.Factory.getInstance()
+                        .newEditable(it.get("Uname").toString())
             }
+
+            view.findViewById<ImageButton>(R.id.locate).visibility = View.GONE
+//            view.findViewById<ImageButton>(R.id.locate).setOnClickListener {
+//                val address = view.findViewById<TextInputEditText>(R.id.address).text.toString()
+//                addressApi(address)
+//            }
 
             view.findViewById<Button>(R.id.submit_btn).setOnClickListener {
 

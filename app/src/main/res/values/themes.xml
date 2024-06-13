@@ -13,6 +13,9 @@
     <style name="NoRippleEffect">
         <item name="android:selectableItemBackground">@android:color/transparent</item>
     </style>
+    <style name="TooTip" parent="Widget.Material3.Tooltip">
+        <item name="android:textColor">@color/black</item>
+    </style>
 
     <style name="Theme.Ims" parent="Base.Theme.Ims" />
 

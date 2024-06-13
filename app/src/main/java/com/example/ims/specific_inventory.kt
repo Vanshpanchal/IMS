@@ -3,7 +3,6 @@ package com.example.ims
 import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.app.Dialog
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -12,6 +11,8 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
+import android.icu.text.NumberFormat
+import android.icu.util.Currency
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -22,16 +23,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material3.Tab
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.toolbox.Volley
@@ -43,14 +44,18 @@ import com.bumptech.glide.request.target.Target
 import com.example.ims.databinding.CustomProgressBinding
 import com.example.ims.databinding.FragmentSpecificInventoryBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipDrawable
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.slider.Slider
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.gson.Gson
@@ -74,7 +79,8 @@ class specific_inventory : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var fs: FirebaseFirestore
     private lateinit var add_dailog: View
-
+    private var isAnyCategoryChipClicked = false
+    lateinit private var filter: ArrayList<String>
     var imageUri: Uri = android.net.Uri.EMPTY
     private var product_img: ImageView? = null
 
@@ -128,9 +134,11 @@ class specific_inventory : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val recyclerView = binding.rvInvProduct
+
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         previewDialog = BottomSheetDialog(requireContext())
         product = arrayListOf()
+        filter = arrayListOf()
         sharedPreferences =
             requireContext().getSharedPreferences("USERDATA", AppCompatActivity.MODE_PRIVATE)
         editor = sharedPreferences.edit()
@@ -139,27 +147,205 @@ class specific_inventory : Fragment() {
         editor_1 = sharedPreferences_1.edit()
 //        get_data()
         checkUser()
-//        if (product.size != 0) {
+//        val chipGroup: FlowLayout = binding.chipGroup
 
-//            monitorStock()
-//        }
-//        for (i in 1..5) {
-//            showNotification("Hello${1}", "World")
-//        }
+        // Example list of tags
+        fs = FirebaseFirestore.getInstance()
 
 
-        binding.toggleButton.addOnButtonCheckedListener { toggleButton, checkedId, isChecked ->
-            if (isChecked) {
-                when (checkedId) {
-                    R.id.Category -> sort_data(1)
-                    R.id.Time -> sort_data(2)
-                    R.id.Name -> sort_data(3)
-                    R.id.Stock -> sort_data(4)
-                    else -> checkUser() // get_data()
+
+        binding.filterProduct.setOnClickListener {
+
+
+            val filterDialog = BottomSheetDialog(requireContext())
+            filterDialog.setContentView(R.layout.filterdialog)
+
+            getCategoriesFromFirestore { categories ->
+                for (category in categories) {
+                    val chip = Chip(requireContext())
+                    chip.apply {
+                        text = category
+                        isCheckable = true
+                        setChipDrawable(
+                            ChipDrawable.createFromAttributes(
+                                requireContext(),
+                                null,
+                                0,
+                                com.google.android.material.R.style.Widget_MaterialComponents_Chip_Filter
+                            )
+                        )
+
+
+                        setOnClickListener {
+                            isAnyCategoryChipClicked = true
+                            filter.clear()
+                            filter.add(0, category)
+                            Log.d(
+                                "D_CHECK",
+                                "onViewCreated filter list: ${filter} "
+                            )
+                        }
+                        filterDialog.apply {
+
+                            filterDialog.findViewById<ChipGroup>(R.id.chipGroup)
+                                ?.addView(chip as View)
+                        }
+                    }
                 }
-            } else {
-                checkUser()//get_data()
             }
+
+           if( filterDialog.findViewById<TabLayout>(R.id.tabLayout)?.selectedTabPosition == 0){
+               filterDialog.findViewById<Button>(R.id.show)?.setOnClickListener {
+//                   Log.d("D_CHECK", "onItemLongClick: ${tab.position}")
+
+                   fs = FirebaseFirestore.getInstance()
+                   fs.collection("Product").document(auth.currentUser?.uid!!)
+                       .collection("MyProduct")
+                       .whereEqualTo("InventoryId", inventory_id).get()
+                       .addOnSuccessListener {
+                           product.clear()
+                           for (data in it) {
+                               val r = data.toObject(inv_itemsItem::class.java)
+                               product.add(r)
+                           }
+                           val a =
+                               product.filter {
+                                   it.PricePerUnit?.toInt()!! > 0 &&
+                                           it.PricePerUnit?.toInt()!! <= filterDialog.findViewById<Slider>(
+                                       R.id.price_slider
+                                   )?.value?.toInt()!!
+                               }
+//
+                           load_data(ArrayList(a))
+                           filterDialog.dismiss()
+
+                       }.addOnFailureListener {
+                           Log.d("D_CHECK", "onItemLongClick: ${it.message}")
+                       }
+               }
+           }
+            filterDialog.findViewById<TabLayout>(R.id.tabLayout)
+                ?.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                    override fun onTabSelected(tab: TabLayout.Tab?) {
+                        when (tab?.position) {
+                            1 -> {
+                                //category
+                                filterDialog.findViewById<LinearLayout>(R.id.category)?.visibility =
+                                    View.VISIBLE
+                                filterDialog.findViewById<LinearLayout>(R.id.price)?.visibility =
+                                    View.GONE
+                                filterDialog.findViewById<LinearLayout>(R.id.stock)?.visibility =
+                                    View.GONE
+
+                            }
+
+                            0 -> {
+                                //price
+                                filterDialog.findViewById<LinearLayout>(R.id.category)?.visibility =
+                                    View.GONE
+                                filterDialog.findViewById<LinearLayout>(R.id.price)?.visibility =
+                                    View.VISIBLE
+                                filterDialog.findViewById<LinearLayout>(R.id.stock)?.visibility =
+                                    View.GONE
+                                filterDialog.findViewById<Button>(R.id.show)?.setOnClickListener {
+                                    Log.d("D_CHECK", "onItemLongClick: ${tab.position}")
+
+                                    fs = FirebaseFirestore.getInstance()
+                                    fs.collection("Product").document(auth.currentUser?.uid!!)
+                                        .collection("MyProduct")
+                                        .whereEqualTo("InventoryId", inventory_id).get()
+                                        .addOnSuccessListener {
+                                            product.clear()
+                                            for (data in it) {
+                                                val r = data.toObject(inv_itemsItem::class.java)
+                                                product.add(r)
+                                            }
+                                            val a =
+                                                product.filter {
+                                                    it.PricePerUnit?.toInt()!! > 0 &&
+                                                            it.PricePerUnit?.toInt()!! <= filterDialog.findViewById<Slider>(
+                                                        R.id.price_slider
+                                                    )?.value?.toInt()!!
+                                                }
+//
+                                            load_data(ArrayList(a))
+                                            filterDialog.dismiss()
+
+                                        }.addOnFailureListener {
+                                            Log.d("D_CHECK", "onItemLongClick: ${it.message}")
+                                        }
+                                }
+                            }
+
+                            2 -> {
+                                filterDialog.findViewById<LinearLayout>(R.id.category)?.visibility =
+                                    View.GONE
+                                filterDialog.findViewById<LinearLayout>(R.id.price)?.visibility =
+                                    View.GONE
+                                filterDialog.findViewById<LinearLayout>(R.id.stock)?.visibility =
+                                    View.VISIBLE
+                            }
+                        }
+                    }
+
+                    override fun onTabUnselected(tab: TabLayout.Tab?) {
+                    }
+
+                    override fun onTabReselected(tab: TabLayout.Tab?) {
+                    }
+
+                })
+
+
+            filterDialog.findViewById<Slider>(R.id.price_slider)
+                ?.setLabelFormatter { value: Float ->
+                    val format = NumberFormat.getCurrencyInstance()
+                    format.maximumFractionDigits = 0
+                    format.currency = Currency.getInstance("INR")
+                    format.format(value.toDouble())
+                }
+
+
+            // Filter Category
+
+
+//
+            filterDialog.show()
+        }
+        binding.toggleButton.addOnButtonCheckedListener { toggleButton, checkedId, isChecked ->
+            fs.collection("Users").document(auth.currentUser?.uid!!).get()
+                .addOnSuccessListener {
+                    var isAdmin = it.get("Admin") as Boolean
+                    if (isAdmin) {
+                        if (isChecked) {
+                            when (checkedId) {
+                                R.id.Category -> {
+                                    product.clear()
+                                    s_getdata(1)
+                                }
+
+                                R.id.Time -> s_getdata(4)
+                                R.id.Name -> s_getdata(2)
+                                R.id.Stock -> s_getdata(3)
+                                else -> s_getdata(4)
+                            }
+                        } else {
+                            s_getdata(4)
+                        }
+                    } else {
+                        if (isChecked) {
+                            when (checkedId) {
+                                R.id.Category -> sort_data(1, "Category")
+                                R.id.Time -> sort_data(2, "CreatedAt")
+                                R.id.Name -> sort_data(3, "ItemName")
+                                R.id.Stock -> sort_data(4, "Stock")
+                                else -> get_data()
+                            }
+                        } else {
+                            get_data()
+                        }
+                    }
+                }
         }
         binding.addProduct.setOnClickListener {
             add_dailog = LayoutInflater.from(requireContext())
@@ -186,7 +372,8 @@ class specific_inventory : Fragment() {
                 )
 
 
-                fs.collection("Product").document(auth.currentUser?.uid!!).collection("MyProduct")
+                fs.collection("Product").document(auth.currentUser?.uid!!)
+                    .collection("MyProduct")
                     .document().set(product).addOnSuccessListener {
                         custom_snackbar("Product Added")
 //                        get_data()
@@ -293,7 +480,7 @@ class specific_inventory : Fragment() {
                                     "LowStock",
                                     "-1"
                                 ).addOnSuccessListener {
-//                                    get_data()
+//                                    s_getdata()
                                     checkUser()
                                     custom_snackbar("Stock Alert For ${product[position].ItemName} Updated Successfully")
                                     monitorStock()
@@ -317,9 +504,11 @@ class specific_inventory : Fragment() {
                         notifyview.findViewById<TextView>(R.id.tvmsg).text = "Notify Low Stock"
                         notifyview.findViewById<TextView>(R.id.textView).text =
                             "Stock Alert For ${product[position].ItemName}"
-                        notifyview.findViewById<TextInputLayout>(R.id.layout_3).hint = "Alert Stock"
+                        notifyview.findViewById<TextInputLayout>(R.id.layout_3).hint =
+                            "Alert Stock"
                         notifyview.findViewById<TextInputEditText>(R.id.p_qty).text =
-                            Editable.Factory.getInstance().newEditable(product[position].LowStock)
+                            Editable.Factory.getInstance()
+                                .newEditable(product[position].LowStock)
                         previewDialog.dismiss()
                         setPositiveButton("Save") { dialog, which ->
                             fs.collection("Product").document(auth.currentUser?.uid!!)
@@ -335,7 +524,7 @@ class specific_inventory : Fragment() {
                                             "LowStock",
                                             notifyview.findViewById<TextInputEditText>(R.id.p_qty).text.toString()
                                         ).addOnSuccessListener {
-//                                            get_data()
+//                                            s_getdata()
                                             checkUser()
                                             custom_snackbar("Stock Alert For ${product[position].ItemName} Updated Successfully")
                                             monitorStock()
@@ -375,7 +564,7 @@ class specific_inventory : Fragment() {
                                     for (doc in it) {
                                         val docRef = doc.reference
                                         docRef.delete().addOnSuccessListener {
-//                                            get_data()
+//                                            s_getdata()
                                             checkUser()
                                             Log.d("D_CHECK", "onItemLongClick: Deleted")
                                         }.addOnFailureListener {
@@ -494,7 +683,7 @@ class specific_inventory : Fragment() {
         })
     }
 
-    private fun sort_data(sortDetails: Int) {
+    private fun sort_data(sortDetails: Int, orderBy: String) {
 
         fs = FirebaseFirestore.getInstance()
         fs.collection("Product").document(auth.currentUser?.uid!!).collection("MyProduct")
@@ -505,6 +694,7 @@ class specific_inventory : Fragment() {
                     val r = data.toObject(inv_itemsItem::class.java)
                     product.add(r)
                 }
+//                load_data(product)
                 when (sortDetails) {
                     1 -> {
                         product.sortBy { it.Category }
@@ -519,7 +709,8 @@ class specific_inventory : Fragment() {
                     }
 
                     4 -> {
-                        product.sortBy { it.Stock }
+                        product.sortBy { it.Stock?.toInt() }
+                        Log.d("D_CHECK", "sort_data: ${product}")
                     }
                 }
                 load_data(product)
@@ -677,7 +868,11 @@ class specific_inventory : Fragment() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channelId = "my_channel_id"
             val channel =
-                NotificationChannel(channelId, "My Channel", NotificationManager.IMPORTANCE_DEFAULT)
+                NotificationChannel(
+                    channelId,
+                    "My Channel",
+                    NotificationManager.IMPORTANCE_DEFAULT
+                )
             notificationManager.createNotificationChannel(channel)
 
             val notification = NotificationCompat.Builder(requireContext(), channelId)
@@ -732,7 +927,8 @@ class specific_inventory : Fragment() {
         }
     }
 
-    private fun s_getdata() {
+    private fun s_getdata(sortDetails: Int) {
+        product.clear()
         fs.collection("Users").get().addOnSuccessListener {
             product.clear()
             for (data in it) {
@@ -747,10 +943,29 @@ class specific_inventory : Fragment() {
                             Log.d("D_CHECK", "getInventory: $r")
                             product.add(r)
                         }
-                        product.sortBy { it.CreatedAt }
+
+                        when (sortDetails) {
+                            1 -> {
+                                product.sortBy { it.Category }
+                            }
+
+                            2 -> {
+                                product.sortBy { it.ItemName }
+                            }
+
+                            3 -> {
+                                product.sortBy { it.Stock?.toInt() }
+                            }
+
+                            4 -> {
+                                product.sortBy { it.CreatedAt }
+                            }
+                        }
                         load_data(product)
+
                     }
             }
+
         }
 
     }
@@ -759,12 +974,53 @@ class specific_inventory : Fragment() {
         fs.collection("Users").document(auth.currentUser?.uid!!).get().addOnSuccessListener {
             var isAdmin = it.get("Admin") as Boolean
             if (isAdmin) {
-                s_getdata()
+                s_getdata(4)
             } else {
                 get_data()
             }
         }
     }
 
+    private fun chip(value: String) {
+        val chip = Chip(requireContext())
+        chip.apply {
+            text = value
+            isCheckable = true
+            setChipDrawable(
+                ChipDrawable.createFromAttributes(
+                    requireContext(),
+                    null,
+                    0,
+                    com.google.android.material.R.style.Widget_MaterialComponents_Chip_Filter
+                )
+            )
+
+
+
+            binding.apply {
+                chipGroup.addView(chip as View)
+            }
+        }
+
+    }
+
+
+    fun getCategoriesFromFirestore(onResult: (List<String>) -> Unit) {
+// Replace with your collection name
+        fs.collection("Product").document(auth.currentUser!!.uid).collection("MyProduct")
+            .whereEqualTo("InventoryId", inventory_id).get().addOnSuccessListener { result ->
+
+                val categories = result.documents.mapNotNull { document ->
+                    document.getString("Category")
+                }.distinct() // To remove duplicates if necessary
+                categories.distinct()
+                Log.d("D_CHECK", "getCategoriesFromFirestore: $categories")
+                onResult(categories)
+            }
+            .addOnFailureListener { exception ->
+                // Handle the error
+                onResult(emptyList())
+            }
+    }
 }
 
