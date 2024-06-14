@@ -1,32 +1,33 @@
 package com.example.ims
 
+import android.icu.text.NumberFormat
+import android.icu.util.Currency
 import android.os.Bundle
-import android.text.Editable
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.ims.databinding.FragmentDashboardBinding
 import com.example.ims.databinding.FragmentProductBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.dialog.MaterialDialogs
-import com.google.android.material.divider.MaterialDivider
-import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipDrawable
+import com.google.android.material.chip.ChipGroup
+import com.google.android.material.slider.Slider
+import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import kotlin.math.log
 
 
 class product : Fragment() {
@@ -36,6 +37,10 @@ class product : Fragment() {
     lateinit var auth: FirebaseAuth
     lateinit var fs: FirebaseFirestore
     lateinit var sr: StorageReference
+    lateinit var Uid: String
+    private var isAnyCategoryChipClicked = false
+    lateinit private var filter: ArrayList<String>
+    lateinit private var filter_name: ArrayList<String>
     lateinit var productList: ArrayList<inv_itemsItem>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -57,13 +62,236 @@ class product : Fragment() {
             product_list("Product 3", "3", "14"),
             product_list("Product 4", "4", "20"),
         )
-
+        Uid = arguments?.getString("uid").toString()
         previewDialog = BottomSheetDialog(requireContext())
         auth = FirebaseAuth.getInstance()
         fs = FirebaseFirestore.getInstance()
         productList = arrayListOf()
+        filter = arrayListOf()
+        filter_name = arrayListOf()
 //        get_data()
-checkUser()
+        checkUser()
+        binding.filterProduct.setOnClickListener {
+
+            filter.clear()
+            val filterDialog = BottomSheetDialog(requireContext())
+            filterDialog.setContentView(R.layout.filterdialog)
+
+            filterDialog.findViewById<Button>(R.id.clear)?.setOnClickListener {
+                checkUser()
+                filterDialog.dismiss()
+            }
+            getCategoriesFromFirestore { categories ->
+                for (category in categories) {
+                    val chip = Chip(requireContext())
+                    chip.apply {
+                        text = category
+                        isCheckable = true
+                        setChipDrawable(
+                            ChipDrawable.createFromAttributes(
+                                requireContext(),
+                                null,
+                                0,
+                                com.google.android.material.R.style.Widget_MaterialComponents_Chip_Filter
+                            )
+                        )
+
+
+                        setOnClickListener {
+                            isAnyCategoryChipClicked = true
+                            filter.add(category)
+                            Log.d(
+                                "D_CHECK",
+                                "onViewCreated filter list: ${filter} "
+                            )
+                        }
+                        filterDialog.apply {
+
+                            filterDialog.findViewById<ChipGroup>(R.id.chipGroup)
+                                ?.addView(chip as View)
+                        }
+                    }
+                }
+            }
+
+            getProductFromFirestore { categories ->
+                for (category in categories) {
+                    val chip = Chip(requireContext())
+                    chip.apply {
+                        text = category
+                        isCheckable = true
+                        setChipDrawable(
+                            ChipDrawable.createFromAttributes(
+                                requireContext(),
+                                null,
+                                0,
+                                com.google.android.material.R.style.Widget_MaterialComponents_Chip_Filter
+                            )
+                        )
+
+
+                        setOnClickListener {
+                            isAnyCategoryChipClicked = true
+                            filter_name.add(category)
+                            Log.d(
+                                "D_CHECK",
+                                "onViewCreated filter list: ${filter} "
+                            )
+                        }
+                        filterDialog.apply {
+
+                            filterDialog.findViewById<ChipGroup>(R.id.chipGroup2)
+                                ?.addView(chip as View)
+                        }
+                    }
+                }
+            }
+            if (filterDialog.findViewById<TabLayout>(R.id.tabLayout)?.selectedTabPosition == 0) {
+                filterDialog.findViewById<Button>(R.id.show)?.setOnClickListener {
+
+                    val list =
+                        productList.filter {
+                            it.PricePerUnit?.toInt()!! in 0..filterDialog.findViewById<Slider>(
+                                R.id.price_slider
+                            )?.value?.toInt()!!
+                        }
+                    updateUI(list as ArrayList<inv_itemsItem>)
+                    filterDialog.dismiss()
+                }
+            }
+            filterDialog.findViewById<TabLayout>(R.id.tabLayout)
+                ?.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                    override fun onTabSelected(tab: TabLayout.Tab?) {
+                        when (tab?.position) {
+                            1 -> {
+                                //category
+                                filterDialog.findViewById<Button>(R.id.clear)?.setOnClickListener {
+                                    checkUser()
+                                    filterDialog.dismiss()
+                                }
+                                filterDialog.findViewById<LinearLayout>(R.id.category)?.visibility =
+                                    View.VISIBLE
+                                filterDialog.findViewById<LinearLayout>(R.id.price)?.visibility =
+                                    View.GONE
+                                filterDialog.findViewById<LinearLayout>(R.id.stock)?.visibility =
+                                    View.GONE
+                                filterDialog.findViewById<Button>(R.id.show)?.setOnClickListener {
+                                    val list =
+                                        productList.filter {
+                                            it.Category in filter
+                                        }
+                                    updateUI(list as ArrayList<inv_itemsItem>)
+                                    filterDialog.dismiss()
+                                }
+                            }
+
+                            0 -> {
+                                //price
+                                filterDialog.findViewById<Button>(R.id.clear)?.setOnClickListener {
+                                    checkUser()
+                                    filterDialog.dismiss()
+                                }
+                                filterDialog.findViewById<LinearLayout>(R.id.category)?.visibility =
+                                    View.GONE
+                                filterDialog.findViewById<LinearLayout>(R.id.price)?.visibility =
+                                    View.VISIBLE
+                                filterDialog.findViewById<LinearLayout>(R.id.stock)?.visibility =
+                                    View.GONE
+                                filterDialog.findViewById<Button>(R.id.show)?.setOnClickListener {
+                                    Log.d("D_CHECK", "onItemLongClick: ${tab.position}")
+
+                                    val list =
+                                        productList.filter {
+                                            it.PricePerUnit?.toInt()!! in 0..filterDialog.findViewById<Slider>(
+                                                R.id.price_slider
+                                            )?.value?.toInt()!!
+                                        }
+                                    updateUI(list as ArrayList<inv_itemsItem>)
+                                    filterDialog.dismiss()
+                                }
+                            }
+
+                            2 -> {
+
+                                filterDialog.findViewById<LinearLayout>(R.id.category)?.visibility =
+                                    View.GONE
+                                filterDialog.findViewById<LinearLayout>(R.id.price)?.visibility =
+                                    View.GONE
+                                filterDialog.findViewById<LinearLayout>(R.id.stock)?.visibility =
+                                    View.VISIBLE
+                                filterDialog.findViewById<Button>(R.id.show)?.setOnClickListener {
+                                    Log.d("D_CHECK", "onItemLongClick: ${tab.position}")
+
+                                    val list =
+                                        productList.filter {
+                                            it.Stock?.toInt()!! in 0..filterDialog.findViewById<Slider>(
+                                                R.id.stock_slider
+                                            )?.value?.toInt()!!
+                                        }
+                                    updateUI(list as ArrayList<inv_itemsItem>)
+                                    filterDialog.dismiss()
+                                }
+                            }
+
+                            3 -> {
+                                filterDialog.findViewById<LinearLayout>(R.id.product)?.visibility =
+                                    View.VISIBLE
+                                filterDialog.findViewById<LinearLayout>(R.id.category)?.visibility =
+                                    View.GONE
+                                filterDialog.findViewById<LinearLayout>(R.id.price)?.visibility =
+                                    View.GONE
+                                filterDialog.findViewById<LinearLayout>(R.id.stock)?.visibility =
+                                    View.GONE
+
+                                filterDialog.findViewById<Button>(R.id.show)?.setOnClickListener {
+                                    val a = productList.filter { it.ItemName in filter_name }
+
+                                    updateUI(java.util.ArrayList(a))
+                                    filterDialog.dismiss()
+                                }
+                            }
+                        }
+                    }
+
+                    override fun onTabUnselected(tab: TabLayout.Tab?) {
+                    }
+
+                    override fun onTabReselected(tab: TabLayout.Tab?) {
+                    }
+
+                })
+
+            filterDialog.findViewById<Slider>(R.id.price_slider)
+                ?.addOnChangeListener { slider, value, fromUser ->
+                    filterDialog.findViewById<TextView>(R.id.price_range_view)?.text = "0 to $value"
+                }
+            filterDialog.findViewById<Slider>(R.id.stock_slider)
+                ?.addOnChangeListener { slider, value, fromUser ->
+                    filterDialog.findViewById<TextView>(R.id.stock_range_view)?.text = "0 to $value"
+                }
+
+
+            filterDialog.findViewById<Slider>(R.id.price_slider)
+                ?.setLabelFormatter { value: Float ->
+                    val format = NumberFormat.getCurrencyInstance()
+                    format.maximumFractionDigits = 0
+                    format.currency = Currency.getInstance("INR")
+                    format.format(value.toDouble())
+                }
+
+            filterDialog.findViewById<Slider>(R.id.stock_slider)
+                ?.setLabelFormatter { value: Float ->
+                    val format = NumberFormat.getNumberInstance()
+                    format.maximumFractionDigits = 0
+                    format.format(value.toDouble())
+                }
+
+            // Filter Category
+
+
+//
+            filterDialog.show()
+        }
         binding.toggleButton.addOnButtonCheckedListener { toggleButton, checkedId, isChecked ->
             if (isChecked) {
 //                clearIcons(toggleButton)
@@ -263,5 +491,51 @@ checkUser()
             }
         }
     }
+
+    fun getCategoriesFromFirestore(onResult: (List<String>) -> Unit) {
+// Replace with your collection name
+        fs.collection("Users").get().addOnSuccessListener {
+            for (data in it) {
+                Log.d("D_CHECK", "s_getinventory: ${data.id}")
+                fs.collection("Product").document(data.id).collection("MyProduct")
+                    .orderBy("CreatedAt", Query.Direction.DESCENDING).get()
+                    .addOnSuccessListener { result ->
+
+                        val categories = result.documents.mapNotNull { document ->
+                            document.getString("Category")
+                        }.distinct() // To remove duplicates if necessary
+                        categories.distinct()
+                        onResult(categories)
+                    }.addOnFailureListener { exception ->
+                        // Handle the error
+                        onResult(emptyList())
+                    }
+
+            }
+        }
+    }
+
+    fun getProductFromFirestore(onResult: (List<String>) -> Unit) {
+// Replace with your collection name
+        fs.collection("Users").get().addOnSuccessListener {
+            for (data in it) {
+                fs.collection("Product").document(data.id).collection("MyProduct")
+                    .orderBy("CreatedAt", Query.Direction.DESCENDING).get()
+                    .addOnSuccessListener { result ->
+                        val productName = result.documents.mapNotNull { document ->
+                            document.getString("ItemName")
+                        }.distinct() // To remove duplicates if necessary
+                        productName.distinct()
+                        Log.d("D_CHECK", "getProductFromFirestore: $productName")
+                        onResult(productName)
+                    }
+                    .addOnFailureListener { exception ->
+                        // Handle the error
+                        onResult(emptyList())
+                    }
+            }
+        }
+    }
 }
+
 

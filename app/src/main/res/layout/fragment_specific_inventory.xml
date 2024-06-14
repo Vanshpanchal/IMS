@@ -34,10 +34,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:paddingHorizontal="15dp"
-        android:visibility="gone"
         android:text="Sort By:"
         android:textColor="@color/black"
         android:textSize="18sp"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -85,14 +85,23 @@
     <!-- Search suggestions/results go here (ScrollView, RecyclerView, etc.). -->
 
 
+
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_inv_product"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
+        android:focusable="false"
         android:orientation="vertical"
         android:visibility="visible"
-        app:layout_constraintTop_toBottomOf="@+id/tv1" />
+        app:iconifiedByDefault="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Progress_bar"
+        app:queryHint="Search..."
+        app:searchHintIcon="@null" />
 
     <LinearLayout
         android:id="@+id/no_data"
@@ -116,10 +125,10 @@
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/animationView"
-            android:layout_marginTop="25dp"
             android:layout_width="150dp"
-            android:layout_gravity="center"
             android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="25dp"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

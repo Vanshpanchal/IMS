@@ -60,6 +60,7 @@ import com.google.firebase.storage.StorageReference
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.json.JSONObject
+import java.util.Locale
 
 //import retrofit2.Response
 
@@ -81,6 +82,8 @@ class specific_inventory : Fragment() {
     private lateinit var Uid: String
     private var isAnyCategoryChipClicked = false
     lateinit private var filter: ArrayList<String>
+    lateinit private var filter_name: ArrayList<String>
+
     var imageUri: Uri = android.net.Uri.EMPTY
     private var product_img: ImageView? = null
 
@@ -141,6 +144,7 @@ class specific_inventory : Fragment() {
         previewDialog = BottomSheetDialog(requireContext())
         product = arrayListOf()
         filter = arrayListOf()
+        filter_name = arrayListOf()
         sharedPreferences =
             requireContext().getSharedPreferences("USERDATA", AppCompatActivity.MODE_PRIVATE)
         editor = sharedPreferences.edit()
@@ -155,15 +159,28 @@ class specific_inventory : Fragment() {
         fs = FirebaseFirestore.getInstance()
 
 
+//        binding.search.setOnQueryTextListener(object :
+//            android.widget.SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String): Boolean {
+//                return false
+//            }
+//
+//            override fun onQueryTextChange(newText: String): Boolean {
+//                searchList(newText)
+//                return true
+//            }
+//        })
 
+//        binding.search.
         binding.filterProduct.setOnClickListener {
 
-
+            filter.clear()
+            filter_name.clear()
             val filterDialog = BottomSheetDialog(requireContext())
             filterDialog.setContentView(R.layout.filterdialog)
 
             filterDialog.findViewById<Button>(R.id.clear)?.setOnClickListener {
-                get_data()
+                checkUser()
                 filterDialog.dismiss()
             }
             getCategoriesFromFirestore { categories ->
@@ -184,8 +201,7 @@ class specific_inventory : Fragment() {
 
                         setOnClickListener {
                             isAnyCategoryChipClicked = true
-                            filter.clear()
-                            filter.add(0, category)
+                            filter.add(category)
                             Log.d(
                                 "D_CHECK",
                                 "onViewCreated filter list: ${filter} "
@@ -194,6 +210,38 @@ class specific_inventory : Fragment() {
                         filterDialog.apply {
 
                             filterDialog.findViewById<ChipGroup>(R.id.chipGroup)
+                                ?.addView(chip as View)
+                        }
+                    }
+                }
+            }
+            getProductFromFirestore { categories ->
+                for (category in categories) {
+                    val chip = Chip(requireContext())
+                    chip.apply {
+                        text = category
+                        isCheckable = true
+                        setChipDrawable(
+                            ChipDrawable.createFromAttributes(
+                                requireContext(),
+                                null,
+                                0,
+                                com.google.android.material.R.style.Widget_MaterialComponents_Chip_Filter
+                            )
+                        )
+
+
+                        setOnClickListener {
+                            isAnyCategoryChipClicked = true
+                            filter_name.add(category)
+                            Log.d(
+                                "D_CHECK",
+                                "onViewCreated filter list: ${filter} "
+                            )
+                        }
+                        filterDialog.apply {
+
+                            filterDialog.findViewById<ChipGroup>(R.id.chipGroup2)
                                 ?.addView(chip as View)
                         }
                     }
@@ -227,7 +275,7 @@ class specific_inventory : Fragment() {
                                 binding.rvInvProduct.visibility = View.GONE
                                 binding.noData.visibility = View.VISIBLE
                                 binding.animationView.playAnimation()
-                            }else{
+                            } else {
                                 binding.rvInvProduct.visibility = View.VISIBLE
                                 binding.noData.visibility = View.GONE
                             }
@@ -246,11 +294,17 @@ class specific_inventory : Fragment() {
                         when (tab?.position) {
                             1 -> {
                                 //category
+                                filterDialog.findViewById<Button>(R.id.clear)?.setOnClickListener {
+                                    checkUser()
+                                    filterDialog.dismiss()
+                                }
                                 filterDialog.findViewById<LinearLayout>(R.id.category)?.visibility =
                                     View.VISIBLE
                                 filterDialog.findViewById<LinearLayout>(R.id.price)?.visibility =
                                     View.GONE
                                 filterDialog.findViewById<LinearLayout>(R.id.stock)?.visibility =
+                                    View.GONE
+                                filterDialog.findViewById<LinearLayout>(R.id.product)?.visibility =
                                     View.GONE
                                 filterDialog.findViewById<Button>(R.id.show)?.setOnClickListener {
                                     fs = FirebaseFirestore.getInstance()
@@ -271,7 +325,7 @@ class specific_inventory : Fragment() {
                                             Log.d("D_CHECK", "onTabSelected: $selectedChipText")
                                             val a =
                                                 product.filter {
-                                                    it.Category.toString() == selectedChipText.toString()
+                                                    it.Category.toString() in filter
                                                 }
                                             if (a.isEmpty()) {
                                                 binding.rvInvProduct.visibility = View.GONE
@@ -279,7 +333,7 @@ class specific_inventory : Fragment() {
                                                 binding.animationView.playAnimation()
 
 
-                                            }else{
+                                            } else {
                                                 binding.rvInvProduct.visibility = View.VISIBLE
                                                 binding.noData.visibility = View.GONE
                                             }
@@ -295,11 +349,17 @@ class specific_inventory : Fragment() {
 
                             0 -> {
                                 //price
+                                filterDialog.findViewById<Button>(R.id.clear)?.setOnClickListener {
+                                    checkUser()
+                                    filterDialog.dismiss()
+                                }
                                 filterDialog.findViewById<LinearLayout>(R.id.category)?.visibility =
                                     View.GONE
                                 filterDialog.findViewById<LinearLayout>(R.id.price)?.visibility =
                                     View.VISIBLE
                                 filterDialog.findViewById<LinearLayout>(R.id.stock)?.visibility =
+                                    View.GONE
+                                filterDialog.findViewById<LinearLayout>(R.id.product)?.visibility =
                                     View.GONE
                                 filterDialog.findViewById<Button>(R.id.show)?.setOnClickListener {
                                     Log.d("D_CHECK", "onItemLongClick: ${tab.position}")
@@ -327,8 +387,7 @@ class specific_inventory : Fragment() {
                                                 binding.rvInvProduct.visibility = View.GONE
                                                 binding.noData.visibility = View.VISIBLE
                                                 binding.animationView.playAnimation()
-                                            }
-                                            else{
+                                            } else {
                                                 binding.rvInvProduct.visibility = View.VISIBLE
                                                 binding.noData.visibility = View.GONE
                                             }
@@ -342,12 +401,15 @@ class specific_inventory : Fragment() {
                             }
 
                             2 -> {
+
                                 filterDialog.findViewById<LinearLayout>(R.id.category)?.visibility =
                                     View.GONE
                                 filterDialog.findViewById<LinearLayout>(R.id.price)?.visibility =
                                     View.GONE
                                 filterDialog.findViewById<LinearLayout>(R.id.stock)?.visibility =
                                     View.VISIBLE
+                                filterDialog.findViewById<LinearLayout>(R.id.product)?.visibility =
+                                    View.GONE
                                 filterDialog.findViewById<Button>(R.id.show)?.setOnClickListener {
                                     Log.d("D_CHECK", "onItemLongClick: ${tab.position}")
 
@@ -374,8 +436,7 @@ class specific_inventory : Fragment() {
                                                 binding.rvInvProduct.visibility = View.GONE
                                                 binding.noData.visibility = View.VISIBLE
                                                 binding.animationView.playAnimation()
-                                            }
-                                            else{
+                                            } else {
                                                 binding.rvInvProduct.visibility = View.VISIBLE
                                                 binding.noData.visibility = View.GONE
                                             }
@@ -386,6 +447,24 @@ class specific_inventory : Fragment() {
                                         }.addOnFailureListener {
                                             Log.d("D_CHECK_e", "onItemLongClick: ${it.message}")
                                         }
+                                }
+                            }
+
+                            3 -> {
+                                filterDialog.findViewById<LinearLayout>(R.id.product)?.visibility =
+                                    View.VISIBLE
+                                filterDialog.findViewById<LinearLayout>(R.id.category)?.visibility =
+                                    View.GONE
+                                filterDialog.findViewById<LinearLayout>(R.id.price)?.visibility =
+                                    View.GONE
+                                filterDialog.findViewById<LinearLayout>(R.id.stock)?.visibility =
+                                    View.GONE
+
+                                filterDialog.findViewById<Button>(R.id.show)?.setOnClickListener {
+                                    val a = product.filter { it.ItemName in filter_name }
+
+                                    load_data(java.util.ArrayList(a))
+                                    filterDialog.dismiss()
                                 }
                             }
                         }
@@ -494,7 +573,10 @@ class specific_inventory : Fragment() {
                     .collection("MyProduct")
                     .document().set(product).addOnSuccessListener {
                         custom_snackbar("Product Added")
-//                        get_data()
+                        get_data()
+                        binding.rvInvProduct.visibility = View.VISIBLE
+                        binding.noData.visibility = View.GONE
+
                         checkUser()
                     }.addOnFailureListener {
                         Log.d("D_CHECK", "onViewCreated: ${it.message}")
@@ -547,7 +629,7 @@ class specific_inventory : Fragment() {
                     binding.rvInvProduct.visibility = View.GONE
                     binding.noData.visibility = View.VISIBLE
                     binding.animationView.playAnimation()
-                }else{
+                } else {
                     binding.rvInvProduct.visibility = View.VISIBLE
 
                     binding.noData.visibility = View.GONE
@@ -1078,8 +1160,7 @@ class specific_inventory : Fragment() {
                             binding.rvInvProduct.visibility = View.GONE
                             binding.noData.visibility = View.VISIBLE
                             binding.animationView.playAnimation()
-
-                        }else{
+                        } else {
                             binding.rvInvProduct.visibility = View.VISIBLE
                             binding.noData.visibility = View.GONE
                         }
@@ -1163,6 +1244,37 @@ class specific_inventory : Fragment() {
                 // Handle the error
                 onResult(emptyList())
             }
+    }
+
+    fun getProductFromFirestore(onResult: (List<String>) -> Unit) {
+// Replace with your collection name
+        fs.collection("Product").document(Uid).collection("MyProduct")
+            .whereEqualTo("InventoryId", inventory_id).get().addOnSuccessListener { result ->
+
+                val productName = result.documents.mapNotNull { document ->
+                    document.getString("ItemName")
+                }.distinct() // To remove duplicates if necessary
+                productName.distinct()
+                Log.d("D_CHECK", "getProductFromFirestore: $productName")
+                onResult(productName)
+            }
+            .addOnFailureListener { exception ->
+                // Handle the error
+                onResult(emptyList())
+            }
+    }
+
+    fun searchList(text: String) {
+        val searchList = java.util.ArrayList<inv_itemsItem>()
+        for (dataClass in product) {
+            if (dataClass.ItemName?.lowercase()?.contains(
+                    text.lowercase(Locale.getDefault())
+                ) == true
+            ) {
+                searchList.add(dataClass)
+            }
+        }
+        load_data(searchList)
     }
 }
 

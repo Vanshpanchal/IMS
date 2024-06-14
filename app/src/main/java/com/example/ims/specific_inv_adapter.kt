@@ -14,6 +14,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.Locale
 
 class specific_inv_adapter(private val items: ArrayList<inv_itemsItem>) :
     RecyclerView.Adapter<specific_inv_adapter.Inv_ViewHolder>() {
@@ -113,6 +114,7 @@ class specific_inv_adapter(private val items: ArrayList<inv_itemsItem>) :
     override fun getItemCount(): Int {
         return items.size
     }
+
 }
 
 
