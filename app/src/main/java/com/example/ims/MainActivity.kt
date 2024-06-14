@@ -5,18 +5,12 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import androidx.activity.enableEdgeToEdge
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.example.ims.databinding.ActivityMainBinding
@@ -80,10 +74,11 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.item_4 -> {
-                        replacefragement(MapsFragment(), "maps")
+                    replacefragement(MapsFragment(), "maps")
                     true
                 }
-                R.id.item_5->{
+
+                R.id.item_5 -> {
                     replacefragement(ProfileFragment(), "profile")
                     true
                 }
@@ -91,6 +86,11 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                Log.d("TAG", "handleOnBackPressed: hello")
+            }
+        })
     }
 
     fun replacefragement(fragment: Fragment, tag: String) {
@@ -164,5 +164,6 @@ class MainActivity : AppCompatActivity() {
             notificationManager.notify(notificationId, notification)
         }
     }
+
 }
 
