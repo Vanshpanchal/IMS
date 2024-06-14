@@ -78,6 +78,7 @@ class specific_inventory : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var fs: FirebaseFirestore
     private lateinit var add_dailog: View
+    private lateinit var Uid: String
     private var isAnyCategoryChipClicked = false
     lateinit private var filter: ArrayList<String>
     var imageUri: Uri = android.net.Uri.EMPTY
@@ -123,6 +124,8 @@ class specific_inventory : Fragment() {
         // Retrieve the data from the arguments
         val inv_name = arguments?.getString("inv_name")
         val inv_id = arguments?.getString("inv_id")
+        Uid = arguments?.getString("uid").toString()
+        Log.d("D_CHECK", "onCreateView: $Uid and ${arguments?.getString("uid")}")
         inventory_id = inv_id!!
         binding.textView.text = inv_name
         auth = FirebaseAuth.getInstance()
@@ -202,11 +205,12 @@ class specific_inventory : Fragment() {
 //                   Log.d("D_CHECK", "onItemLongClick: ${tab.position}")
 
                     fs = FirebaseFirestore.getInstance()
-                    fs.collection("Product").document(auth.currentUser?.uid!!)
+                    fs.collection("Product").document(Uid)
                         .collection("MyProduct")
                         .whereEqualTo("InventoryId", inventory_id).get()
                         .addOnSuccessListener {
                             product.clear()
+
                             for (data in it) {
                                 val r = data.toObject(inv_itemsItem::class.java)
                                 product.add(r)
@@ -218,6 +222,15 @@ class specific_inventory : Fragment() {
                                         R.id.price_slider
                                     )?.value?.toInt()!!
                                 }
+
+                            if (a.isEmpty()) {
+                                binding.rvInvProduct.visibility = View.GONE
+                                binding.noData.visibility = View.VISIBLE
+                                binding.animationView.playAnimation()
+                            }else{
+                                binding.rvInvProduct.visibility = View.VISIBLE
+                                binding.noData.visibility = View.GONE
+                            }
 //
                             load_data(ArrayList(a))
                             filterDialog.dismiss()
@@ -241,11 +254,12 @@ class specific_inventory : Fragment() {
                                     View.GONE
                                 filterDialog.findViewById<Button>(R.id.show)?.setOnClickListener {
                                     fs = FirebaseFirestore.getInstance()
-                                    fs.collection("Product").document(auth.currentUser?.uid!!)
+                                    fs.collection("Product").document(Uid)
                                         .collection("MyProduct")
                                         .whereEqualTo("InventoryId", inventory_id).get()
                                         .addOnSuccessListener {
                                             product.clear()
+
                                             for (data in it) {
                                                 val r = data.toObject(inv_itemsItem::class.java)
                                                 product.add(r)
@@ -259,6 +273,17 @@ class specific_inventory : Fragment() {
                                                 product.filter {
                                                     it.Category.toString() == selectedChipText.toString()
                                                 }
+                                            if (a.isEmpty()) {
+                                                binding.rvInvProduct.visibility = View.GONE
+                                                binding.noData.visibility = View.VISIBLE
+                                                binding.animationView.playAnimation()
+
+
+                                            }else{
+                                                binding.rvInvProduct.visibility = View.VISIBLE
+                                                binding.noData.visibility = View.GONE
+                                            }
+
                                             load_data(ArrayList(a))
                                             filterDialog.dismiss()
 
@@ -280,11 +305,12 @@ class specific_inventory : Fragment() {
                                     Log.d("D_CHECK", "onItemLongClick: ${tab.position}")
 
                                     fs = FirebaseFirestore.getInstance()
-                                    fs.collection("Product").document(auth.currentUser?.uid!!)
+                                    fs.collection("Product").document(Uid)
                                         .collection("MyProduct")
                                         .whereEqualTo("InventoryId", inventory_id).get()
                                         .addOnSuccessListener {
                                             product.clear()
+
                                             for (data in it) {
                                                 val r = data.toObject(inv_itemsItem::class.java)
                                                 product.add(r)
@@ -297,6 +323,15 @@ class specific_inventory : Fragment() {
                                                     )?.value?.toInt()!!
                                                 }
 //
+                                            if (a.isEmpty()) {
+                                                binding.rvInvProduct.visibility = View.GONE
+                                                binding.noData.visibility = View.VISIBLE
+                                                binding.animationView.playAnimation()
+                                            }
+                                            else{
+                                                binding.rvInvProduct.visibility = View.VISIBLE
+                                                binding.noData.visibility = View.GONE
+                                            }
                                             load_data(ArrayList(a))
                                             filterDialog.dismiss()
 
@@ -317,11 +352,12 @@ class specific_inventory : Fragment() {
                                     Log.d("D_CHECK", "onItemLongClick: ${tab.position}")
 
                                     fs = FirebaseFirestore.getInstance()
-                                    fs.collection("Product").document(auth.currentUser?.uid!!)
+                                    fs.collection("Product").document(Uid)
                                         .collection("MyProduct")
                                         .whereEqualTo("InventoryId", inventory_id).get()
                                         .addOnSuccessListener {
                                             product.clear()
+
                                             for (data in it) {
                                                 val r = data.toObject(inv_itemsItem::class.java)
                                                 product.add(r)
@@ -334,11 +370,21 @@ class specific_inventory : Fragment() {
                                                     )?.value?.toInt()!!
                                                 }
 //
+                                            if (a.isEmpty()) {
+                                                binding.rvInvProduct.visibility = View.GONE
+                                                binding.noData.visibility = View.VISIBLE
+                                                binding.animationView.playAnimation()
+                                            }
+                                            else{
+                                                binding.rvInvProduct.visibility = View.VISIBLE
+                                                binding.noData.visibility = View.GONE
+                                            }
                                             load_data(ArrayList(a))
+                                            Log.d("D_CHECK", "__onItemLongClick: ${a}")
                                             filterDialog.dismiss()
 
                                         }.addOnFailureListener {
-                                            Log.d("D_CHECK", "onItemLongClick: ${it.message}")
+                                            Log.d("D_CHECK_e", "onItemLongClick: ${it.message}")
                                         }
                                 }
                             }
@@ -385,7 +431,7 @@ class specific_inventory : Fragment() {
             filterDialog.show()
         }
         binding.toggleButton.addOnButtonCheckedListener { toggleButton, checkedId, isChecked ->
-            fs.collection("Users").document(auth.currentUser?.uid!!).get()
+            fs.collection("Users").document(Uid).get()
                 .addOnSuccessListener {
                     var isAdmin = it.get("Admin") as Boolean
                     if (isAdmin) {
@@ -497,6 +543,15 @@ class specific_inventory : Fragment() {
         fs = FirebaseFirestore.getInstance()
         fs.collection("Product").document(auth.currentUser?.uid!!).collection("MyProduct")
             .whereEqualTo("InventoryId", inventory_id).get().addOnSuccessListener {
+                if (it.isEmpty) {
+                    binding.rvInvProduct.visibility = View.GONE
+                    binding.noData.visibility = View.VISIBLE
+                    binding.animationView.playAnimation()
+                }else{
+                    binding.rvInvProduct.visibility = View.VISIBLE
+
+                    binding.noData.visibility = View.GONE
+                }
                 product.clear()
                 for (data in it) {
                     val r = data.toObject(inv_itemsItem::class.java)
@@ -504,6 +559,8 @@ class specific_inventory : Fragment() {
                     product.add(r)
                 }
                 product.sortBy { it.CreatedAt }
+                Log.d("D_CHECK", "load_data: ${product.size}++++")
+
                 load_data(product)
             }
     }
@@ -521,7 +578,12 @@ class specific_inventory : Fragment() {
         binding.rvInvProduct.adapter = specific_inv_adapter
         binding.rvInvProduct.viewTreeObserver.addOnGlobalLayoutListener {
             binding.ProgressBar.visibility = View.GONE
+
         }
+//        if (product.size) {
+//            binding.rvInvProduct.visibility = View.GONE
+//            binding.noData.visibility = View.VISIBLE
+//        }
         specific_inv_adapter.onItem(object : specific_inv_adapter.onitemclick {
             override fun itemClickListener(position: Int) {
 
@@ -541,7 +603,7 @@ class specific_inventory : Fragment() {
                     view.findViewById<Button>(R.id.remove_notify).visibility = View.VISIBLE
                 }
                 view.findViewById<Button>(R.id.remove_notify).setOnClickListener {
-                    fs.collection("Product").document(auth.currentUser?.uid!!)
+                    fs.collection("Product").document(Uid)
                         .collection("MyProduct")
                         .whereEqualTo("ProductId", product[position].ProductId).get()
                         .addOnSuccessListener {
@@ -583,7 +645,7 @@ class specific_inventory : Fragment() {
                                 .newEditable(product[position].LowStock)
                         previewDialog.dismiss()
                         setPositiveButton("Save") { dialog, which ->
-                            fs.collection("Product").document(auth.currentUser?.uid!!)
+                            fs.collection("Product").document(Uid)
                                 .collection("MyProduct")
                                 .whereEqualTo("ProductId", product[position].ProductId).get()
                                 .addOnSuccessListener {
@@ -624,12 +686,12 @@ class specific_inventory : Fragment() {
                         .setMessage("Are you sure you want to remove ${product[position].ItemName}?")
                         .setPositiveButton("Yes") { dialog, which ->
                             sr = FirebaseStorage.getInstance()
-                                .getReference("Product/" + auth.currentUser?.uid)
+                                .getReference("Product/" + Uid)
                                 .child("Inv${inventory_id}_Product${product[position].ProductId}")
                             sr.delete()
 
 //                        val product_ID = product[position]
-                            fs.collection("Product").document(auth.currentUser?.uid!!)
+                            fs.collection("Product").document(Uid)
                                 .collection("MyProduct")
                                 .whereEqualTo("ProductId", product[position].ProductId).get()
                                 .addOnSuccessListener {
@@ -1003,6 +1065,7 @@ class specific_inventory : Fragment() {
         product.clear()
         fs.collection("Users").get().addOnSuccessListener {
             product.clear()
+
             for (data in it) {
                 Log.d("D_CHECK", "s_getinventory: ${data.id}")
                 Log.d("D_CHECK", "getInventory: $inventory_id")
@@ -1010,6 +1073,16 @@ class specific_inventory : Fragment() {
                 fs = FirebaseFirestore.getInstance()
                 fs.collection("Product").document(data.id).collection("MyProduct")
                     .whereEqualTo("InventoryId", inventory_id).get().addOnSuccessListener {
+                        Log.d("D_CHECK", "s_getdata: $it")
+                        if (it.isEmpty) {
+                            binding.rvInvProduct.visibility = View.GONE
+                            binding.noData.visibility = View.VISIBLE
+                            binding.animationView.playAnimation()
+
+                        }else{
+                            binding.rvInvProduct.visibility = View.VISIBLE
+                            binding.noData.visibility = View.GONE
+                        }
                         for (data in it) {
                             val r = data.toObject(inv_itemsItem::class.java)
                             Log.d("D_CHECK", "getInventory: $r")
@@ -1033,6 +1106,7 @@ class specific_inventory : Fragment() {
                                 product.sortBy { it.CreatedAt }
                             }
                         }
+                        Log.d("D_CHECK", "load_data: ${product.size}++++")
                         load_data(product)
 
                     }
@@ -1075,7 +1149,7 @@ class specific_inventory : Fragment() {
 
     fun getCategoriesFromFirestore(onResult: (List<String>) -> Unit) {
 // Replace with your collection name
-        fs.collection("Product").document(auth.currentUser!!.uid).collection("MyProduct")
+        fs.collection("Product").document(Uid).collection("MyProduct")
             .whereEqualTo("InventoryId", inventory_id).get().addOnSuccessListener { result ->
 
                 val categories = result.documents.mapNotNull { document ->

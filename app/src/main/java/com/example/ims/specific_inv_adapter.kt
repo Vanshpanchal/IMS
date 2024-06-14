@@ -98,6 +98,7 @@ class specific_inv_adapter(private val items: ArrayList<inv_itemsItem>) :
                     R.color.red
                 )
             )
+
         } else {
             holder.quantity_left.setTextColor(
                 ContextCompat.getColor(

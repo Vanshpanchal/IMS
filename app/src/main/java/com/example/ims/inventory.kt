@@ -133,6 +133,7 @@ class inventory : Fragment() {
                         "Address" to view.findViewById<TextInputEditText>(R.id.address).text.toString(),
                         "InventoryOwner" to view.findViewById<TextInputEditText>(R.id.i_owner).text.toString(),
                         "CreatedAt" to Timestamp.now().toDate(),
+                        "UserID" to auth.currentUser?.uid!!
 
                         )
                     fs.collection("Inventory").document(auth.currentUser?.uid!!)
@@ -299,7 +300,8 @@ class inventory : Fragment() {
                 val bundle = Bundle()
                 bundle.putString("inv_name", "${inv[position].InventoryName}")
                 bundle.putString("inv_id", "${inv[position].InventoryID}")
-
+                bundle.putString("uid","${inv[position].UserID}")
+                Log.d("D_CHECK", "itemClickListener---: ${inv[position].UserID}")
                 frag.arguments = bundle
                 (activity as? MainActivity)?.replacefragement(frag, "specific_inventory")
             }
