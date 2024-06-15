@@ -153,6 +153,12 @@ class specific_inventory : Fragment() {
         editor_1 = sharedPreferences_1.edit()
 //        get_data()
         checkUser()
+        fs.collection("Users").document(auth.currentUser?.uid!!).get().addOnSuccessListener {
+            val isAdmin = it.get("Admin") as Boolean
+            if (isAdmin) {
+                binding.addProduct.visibility = View.GONE
+            }
+        }
 //        val chipGroup: FlowLayout = binding.chipGroup
 
         // Example list of tags
@@ -681,6 +687,14 @@ class specific_inventory : Fragment() {
                 previewDialog.show()
                 previewDialog.setCancelable(true)
                 previewDialog.setCanceledOnTouchOutside(true)
+                fs.collection("Users").document(auth.currentUser?.uid!!).get().addOnSuccessListener {
+                    val isAdmin = it.get("Admin") as Boolean
+                    if (isAdmin) {
+                        previewDialog.findViewById<Button>(R.id.remove_notify)?.visibility = View.GONE
+                        previewDialog.findViewById<Button>(R.id.delete)?.visibility = View.GONE
+                        previewDialog.findViewById<Button>(R.id.notify)?.visibility = View.GONE
+                    }
+                }
                 if (product[position].LowStock?.toInt() != -1) {
                     view.findViewById<Button>(R.id.remove_notify).visibility = View.VISIBLE
                 }

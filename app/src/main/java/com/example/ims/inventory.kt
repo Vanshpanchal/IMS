@@ -1,7 +1,6 @@
 package com.example.ims
 
 import android.content.SharedPreferences
-import android.icu.text.SimpleDateFormat
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -15,9 +14,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.platform.LocalView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
@@ -26,7 +23,6 @@ import com.example.ims.databinding.FragmentInventoryBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -34,15 +30,12 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.time.Instant
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.TextStyle
 import java.util.Locale
-import kotlin.coroutines.coroutineContext
 
 //import retrofit2.Response
 
@@ -80,7 +73,12 @@ class inventory : Fragment() {
 //        addressApi("Vadodara")
         checkUser()
 
-
+        fs.collection("Users").document(auth.currentUser?.uid!!).get().addOnSuccessListener {
+            isAdmin = it.get("Admin") as Boolean
+            if (isAdmin) {
+                binding.addInv.visibility = View.GONE
+            }
+        }
         val a = inventory_list("Inventory 1", "25-01-2023", "01", "Owner 1")
         val b = inventory_list("Inventory 8", "01-02-2023", "08", "Owner 2")
         val c = inventory_list("Inventory 7", "31-01-2023", "03", "Owner 3")
@@ -135,7 +133,7 @@ class inventory : Fragment() {
                         "CreatedAt" to Timestamp.now().toDate(),
                         "UserID" to auth.currentUser?.uid!!
 
-                        )
+                    )
                     fs.collection("Inventory").document(auth.currentUser?.uid!!)
                         .collection("MyInventory").document().set(inventoryInfo)
                         .addOnCompleteListener {
@@ -167,7 +165,7 @@ class inventory : Fragment() {
 
     }
 
-    private fun addressApi(Address: String) {
+    private fun addressApi(Address: String, Uid: String) {
         var cordinates = listOf<Double>()
         val url =
             "https://api.geoapify.com/v1/geocode/search?text=$Address&apiKey=a4df04f3e2154cafbf08d57831558743"
@@ -201,7 +199,9 @@ class inventory : Fragment() {
                 val cordinates = hashMapOf(
                     "Longitude" to P_longitude,
                     "Latitude" to P_latitude,
-                    "Address" to Address
+                    "Address" to Address,
+                    "CreatedAt" to Timestamp.now().toDate(),
+                    "UserID" to Uid
                 )
                 fs.collection("Cordinates").document(auth.currentUser?.uid!!)
                     .collection("MyCordinates").document().set(
@@ -300,7 +300,7 @@ class inventory : Fragment() {
                 val bundle = Bundle()
                 bundle.putString("inv_name", "${inv[position].InventoryName}")
                 bundle.putString("inv_id", "${inv[position].InventoryID}")
-                bundle.putString("uid","${inv[position].UserID}")
+                bundle.putString("uid", "${inv[position].UserID}")
                 Log.d("D_CHECK", "itemClickListener---: ${inv[position].UserID}")
                 frag.arguments = bundle
                 (activity as? MainActivity)?.replacefragement(frag, "specific_inventory")
@@ -319,7 +319,13 @@ class inventory : Fragment() {
                 previewDialog.setCancelable(true)
                 previewDialog.setCanceledOnTouchOutside(true)
 
-
+                fs.collection("Users").document(auth.currentUser?.uid!!).get()
+                    .addOnSuccessListener {
+                        isAdmin = it.get("Admin") as Boolean
+                        if (isAdmin) {
+                            previewDialog.findViewById<Button>(R.id.delete)?.visibility = View.GONE
+                        }
+                    }
                 view.findViewById<Button>(R.id.delete).setOnClickListener {
                     MaterialAlertDialogBuilder(requireContext()).setTitle("Inventory Delete")
                         .setMessage("Are You Sure You Want To Delete ${inv[position].InventoryName} Inventory")
@@ -345,7 +351,7 @@ class inventory : Fragment() {
 
                 view.findViewById<Button>(R.id.locate).setOnClickListener {
                     val address = view.findViewById<TextView>(R.id.inv_address).text.toString()
-                    addressApi(address)
+                    addressApi(address, inv[position].UserID!!)
                     val mapFragment = MapsFragment()
                     (activity as? MainActivity)?.replacefragement(mapFragment, "specific_inventory")
                     previewDialog.dismiss()

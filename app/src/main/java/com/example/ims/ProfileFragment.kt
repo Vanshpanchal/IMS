@@ -12,7 +12,6 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +20,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat.getSystemService
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.ims.databinding.CustomProgressBinding
 import com.example.ims.databinding.FragmentProfileBinding
@@ -33,7 +32,6 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import kotlin.math.log
 
 class ProfileFragment : Fragment() {
     lateinit var fs: FirebaseFirestore
@@ -42,6 +40,7 @@ class ProfileFragment : Fragment() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
     lateinit var binding: FragmentProfileBinding
+    private val LOCATION_PERMISSION_REQUEST_CODE = 1
     private var galleryLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK && result.data != null) {
@@ -53,8 +52,7 @@ class ProfileFragment : Fragment() {
                 dialog.show()
 //                imageUri = result?.data!!.data!!
                 binding.profilePic.setImageURI(result.data!!.data)
-                sr = FirebaseStorage.getInstance()
-                    .getReference("Profile")
+                sr = FirebaseStorage.getInstance().getReference("Profile")
                     .child(auth.currentUser?.uid!!)
                 sr.putFile(result.data?.data!!).addOnSuccessListener {
                     Log.d("D_CHECK", "Product Image Uploaded ")
@@ -79,8 +77,7 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
         // Inflate the layout for this fragment
@@ -102,9 +99,12 @@ class ProfileFragment : Fragment() {
             var isAdmin = it.get("Admin") as Boolean
             if (isAdmin) {
                 binding.adminIcon.visibility = View.VISIBLE
+                binding.role.text = "ADMIN"
 //                binding.textView.text = "Admin"
+
             } else {
                 binding.adminIcon.visibility = View.GONE
+                binding.role.text = "USER"
 //                binding.textView.text = "User"
 
             }
@@ -120,13 +120,10 @@ class ProfileFragment : Fragment() {
         binding.profilePic.setOnClickListener {
             requestpermission()
         }
-
         binding.logoutCard.setOnClickListener {
             MaterialAlertDialogBuilder(
                 requireContext()
-            )
-                .setTitle("Log Out")
-                .setIcon(R.drawable.logout_24px)
+            ).setTitle("Log Out").setIcon(R.drawable.logout_24px)
                 .setMessage("Are you sure you want to log out?")
                 .setPositiveButton("Yes") { dialog, which ->
                     editor.clear()
@@ -136,11 +133,9 @@ class ProfileFragment : Fragment() {
                     startActivity(intent)
                     requireActivity().finish()
 
-                }
-                .setNegativeButton("No") { dialog, which ->
+                }.setNegativeButton("No") { dialog, which ->
                     dialog.dismiss()
-                }
-                .show();
+                }.show();
         }
 
         binding.resetCard.setOnClickListener {
@@ -175,9 +170,7 @@ class ProfileFragment : Fragment() {
     }
 
     fun loadData() {
-        sr = FirebaseStorage.getInstance()
-            .getReference("Profile")
-            .child(auth.currentUser?.uid!!)
+        sr = FirebaseStorage.getInstance().getReference("Profile").child(auth.currentUser?.uid!!)
         sr.downloadUrl.addOnSuccessListener {
             Glide.with(requireContext()).load(it).into(binding.profilePic)
         }
@@ -240,6 +233,9 @@ class ProfileFragment : Fragment() {
 
                 }
             }
+        } else {
+//            checkLocationPermission()
+//            getLastKnownLocation()
         }
     }
 
@@ -252,4 +248,6 @@ class ProfileFragment : Fragment() {
         bar.setActionTextColor(resources.getColor(R.color.blue3))
         bar.show()
     }
+
+
 }

@@ -63,4 +63,5 @@
     <string name="users">Users</string>
     <string name="reset_password">Reset Password</string>
     <string name="no_data_available">No Data Available</string>
+    <string name="role">Role</string>
 </resources>
