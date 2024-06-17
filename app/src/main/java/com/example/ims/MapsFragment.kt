@@ -79,12 +79,19 @@ class MapsFragment : Fragment() {
                     Log.d("D_CHECK", "Map:: ${cordinates}")
                     Log.d("D_CHECK", "Map ${cordinates}")
                     if (document == documents.last()) {
+                        if (cordinates.size > 0) {
                         cordinates.sortBy { it.CreatedAt }
                         val lastPosition = LatLng(
                             cordinates.last().Latitude ?: 0.0,
                             cordinates.last().Longitude ?: 0.0
                         )
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastPosition, 8f))
+                            googleMap.moveCamera(
+                                CameraUpdateFactory.newLatLngZoom(
+                                    lastPosition,
+                                    8f
+                                )
+                            )
+                        }
                     }
                 }
                 // Optionally move the camera to the last marker
@@ -120,7 +127,11 @@ class MapsFragment : Fragment() {
                             val marker = document.data.get("Address").toString()
                             val r = document.toObject(Cordinate::class.java)
                             cordinates.add(r)
-                            googleMap.addMarker(MarkerOptions().position(position).title(marker))
+                            if (cordinates.size > 0) {
+                                googleMap.addMarker(
+                                    MarkerOptions().position(position).title(marker)
+                                )
+                            }
                         }
                         // Optionally move the camera to the last marker
 //                        if (!documents.isEmpty) {
@@ -136,13 +147,19 @@ class MapsFragment : Fragment() {
 //                            )
 //                        }
                         Log.d("D_CHECK", "Map ${cordinates}")
-                        cordinates.sortBy { it.CreatedAt }
-                        val lastPosition = LatLng(
-                            cordinates.last().Latitude ?: 0.0,
-                            cordinates.last().Longitude ?: 0.0
-                        )
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastPosition, 8f))
-
+                        if (cordinates.size > 0) {
+                            cordinates.sortBy { it.CreatedAt }
+                            val lastPosition = LatLng(
+                                cordinates.last().Latitude ?: 0.0,
+                                cordinates.last().Longitude ?: 0.0
+                            )
+                            googleMap.moveCamera(
+                                CameraUpdateFactory.newLatLngZoom(
+                                    lastPosition,
+                                    8f
+                                )
+                            )
+                        }
                     }
 
                     .addOnFailureListener { exception ->

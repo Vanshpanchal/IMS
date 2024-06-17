@@ -175,6 +175,8 @@ class product : Fragment() {
                                     View.GONE
                                 filterDialog.findViewById<LinearLayout>(R.id.stock)?.visibility =
                                     View.GONE
+                                filterDialog.findViewById<LinearLayout>(R.id.product)?.visibility =
+                                    View.GONE
                                 filterDialog.findViewById<Button>(R.id.show)?.setOnClickListener {
                                     val list =
                                         productList.filter {
@@ -196,6 +198,8 @@ class product : Fragment() {
                                 filterDialog.findViewById<LinearLayout>(R.id.price)?.visibility =
                                     View.VISIBLE
                                 filterDialog.findViewById<LinearLayout>(R.id.stock)?.visibility =
+                                    View.GONE
+                                filterDialog.findViewById<LinearLayout>(R.id.product)?.visibility =
                                     View.GONE
                                 filterDialog.findViewById<Button>(R.id.show)?.setOnClickListener {
                                     Log.d("D_CHECK", "onItemLongClick: ${tab.position}")
@@ -219,6 +223,8 @@ class product : Fragment() {
                                     View.GONE
                                 filterDialog.findViewById<LinearLayout>(R.id.stock)?.visibility =
                                     View.VISIBLE
+                                filterDialog.findViewById<LinearLayout>(R.id.product)?.visibility =
+                                    View.GONE
                                 filterDialog.findViewById<Button>(R.id.show)?.setOnClickListener {
                                     Log.d("D_CHECK", "onItemLongClick: ${tab.position}")
 

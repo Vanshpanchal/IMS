@@ -335,7 +335,14 @@ class inventory : Fragment() {
                                 .collection("MyInventory")
                                 .document(inv[position].InventoryID.toString())
                                 .delete().addOnSuccessListener {
-
+                                    fs.collection("Product").document(auth.currentUser?.uid!!)
+                                        .collection("MyProduct").whereEqualTo("InventoryId", inv[position].InventoryID).get().addOnSuccessListener {
+                                            for (document in it.documents) {
+                                               document.reference.delete().addOnSuccessListener {
+                                                   Log.d("D_CHECK", "onItemLongClick: Product Deleted from Product")
+                                               }
+                                            }
+                                        }
                                     Log.d("D_CHECK", "onItemLongClick: Inventory Deleted")
                                     custom_snackbar("Inventory Deleted")
 //                                    getInventory()

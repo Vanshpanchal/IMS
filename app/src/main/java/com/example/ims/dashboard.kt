@@ -1,24 +1,17 @@
 package com.example.ims
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.example.ims.databinding.FragmentDashboardBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import okhttp3.Callback
-import retrofit2.Call
-import retrofit2.Response
 
 
 class dashboard : Fragment() {
@@ -69,6 +62,23 @@ class dashboard : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        checkUser()
+
+    }
+
+    fun checkUser() {
+        fs.collection("Users").document(auth.currentUser?.uid!!).get().addOnSuccessListener {
+            var isAdmin = it.get("Admin") as Boolean
+            if (isAdmin) {
+                adminDashboard()
+            }else{
+                userDashboard()
+            }
+        }
+    }
+
+    fun userDashboard(){
         fs.collection("Product").document(auth.currentUser?.uid!!).collection("MyProduct").get()
             .addOnSuccessListener {
                 binding.totalItems.text = it.size().toString()
@@ -91,8 +101,43 @@ class dashboard : Fragment() {
                 binding.lowStockItems.text = count.toString()
 
             }
+    }
+    fun adminDashboard() {
+        fs.collection("Users").get().addOnSuccessListener {
+            var count_notify = 0
+            var count_lowstock = 0
+            for (data in it) {
+                fs.collection("Product").document(data.id).collection("MyProduct")
+                    .whereNotEqualTo("LowStock", "-1").get().addOnSuccessListener {
+                        count_lowstock+=it.size()
+                        Log.d("D_CHECK", "onViewCreated : ${it.size()}")
+                        for (doc in it) {
+                            Log.d("D_CHECK", "onViewCreated: ${doc.get("LowStock").toString()}")
+                            if (doc.get("Stock").toString().toInt() < doc.get("LowStock").toString()
+                                    .toInt()
+                            ) {
+                                count_notify++
+                        binding.lowStockItems.text = count_notify.toString()
+                            }
+                        }
+                        binding.totalNotify.text = it.size().toString()
+                    }
+            }
+
+        }
+        fs.collection("Users").get().addOnSuccessListener {
+            var count=0
+            for (data in it) {
+                fs.collection("Product").document(data.id).collection("MyProduct").get()
+                    .addOnSuccessListener {
+                        count += it.size()
+                        Log.d("D_CHECK", "onViewCreated__: ${it.size()}")
+                        binding.totalItems.text = it.size().toString()
+                    }
+            }
+            binding.totalItems.text = it.size().toString()
+        }
 
 
     }
-
 }
