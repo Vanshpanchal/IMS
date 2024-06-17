@@ -1,5 +1,6 @@
 package com.example.ims
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -36,11 +37,17 @@ class StartAct : AppCompatActivity() {
         installSplashScreen()
 //        val serviceIntent = Intent(this, StockMonitorService::class.java)
 //        ContextCompat.startForegroundService(this, serviceIntent)
+        ObjectAnimator.ofFloat(binding.appIcon, "translationY", 100f).apply {
+            duration = 2000
+            start()
+        }
         if (!isInternetAvailable()) {
             binding.animationView.visibility = View.GONE
+            binding.appIcon.visibility = View.GONE
             showNoInternetDialog()
         } else {
             binding.animationView.visibility = View.VISIBLE
+            binding.appIcon.visibility = View.VISIBLE
             auth = FirebaseAuth.getInstance()
 
             sharedPreferences = getSharedPreferences("USERDATA", Context.MODE_PRIVATE)
