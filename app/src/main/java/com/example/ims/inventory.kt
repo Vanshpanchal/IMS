@@ -155,6 +155,9 @@ class inventory : Fragment() {
             dialog.show()
         }
 
+//        binding.sinv.setOnClickListener {
+//            search("A")
+//        }
 
         sharedPreferences =
             requireContext().getSharedPreferences("USERDATA", AppCompatActivity.MODE_PRIVATE)
@@ -251,21 +254,23 @@ class inventory : Fragment() {
 
     private fun s_getinventory() {
         inventoryItems.clear()
-        fs.collection("Users").get().addOnSuccessListener {
+        fs.collection("Users").get().addOnSuccessListener { it ->
             for (data in it) {
                 Log.d("D_CHECK", "s_getinventory: ${data.id}")
                 fs.collection("Inventory").document(data.id).collection("MyInventory")
                     .orderBy("CreatedAt", Query.Direction.ASCENDING)
                     .get()
                     .addOnSuccessListener { it ->
+
                         val inventoryItemList = ArrayList<InventoryItems>()
                         for (data in it) {
 
                             val r = data.toObject(InventoryItems::class.java)
                             r.InventoryID = data.id
-                            Log.d("D_CHECK", "getInventory: $r")
+                            Log.d("D_CHECK", "_____________getInventory: $r")
                             inventoryItems.add(r)
                         }
+
                         updateUi(inventoryItems)
                         Log.d("D_CHECK", "getInventory: $inventoryItems")
                     }
@@ -294,7 +299,7 @@ class inventory : Fragment() {
         Log.d("D_CHECK", "load_data: $inv")
         inventoryAdapter.onItem(object : inventory_adapter.onitemclick {
             override fun itemClickListener(position: Int) {
-//                Log.d("hello", "itemClickListener: ${inv[position].InventoryOwner}")
+                Log.d("hello", "itemClickListener---::: ${inv}")
 
                 val frag = specific_inventory()
                 val bundle = Bundle()
@@ -336,11 +341,16 @@ class inventory : Fragment() {
                                 .document(inv[position].InventoryID.toString())
                                 .delete().addOnSuccessListener {
                                     fs.collection("Product").document(auth.currentUser?.uid!!)
-                                        .collection("MyProduct").whereEqualTo("InventoryId", inv[position].InventoryID).get().addOnSuccessListener {
+                                        .collection("MyProduct")
+                                        .whereEqualTo("InventoryId", inv[position].InventoryID)
+                                        .get().addOnSuccessListener {
                                             for (document in it.documents) {
-                                               document.reference.delete().addOnSuccessListener {
-                                                   Log.d("D_CHECK", "onItemLongClick: Product Deleted from Product")
-                                               }
+                                                document.reference.delete().addOnSuccessListener {
+                                                    Log.d(
+                                                        "D_CHECK",
+                                                        "onItemLongClick: Product Deleted from Product"
+                                                    )
+                                                }
                                             }
                                         }
                                     Log.d("D_CHECK", "onItemLongClick: Inventory Deleted")
@@ -504,6 +514,56 @@ class inventory : Fragment() {
 //        })
 //    }
 //
+
+    private fun search(name: String) {
+        inventoryItems.clear()
+        fs.collection("Users").get().addOnSuccessListener {
+            for (data in it) {
+                Log.d("D_CHECK", "s_getinventory: ${data.id}")
+                fs.collection("Product").document(data.id).collection("MyProduct")
+                    .orderBy("CreatedAt", Query.Direction.DESCENDING).get().addOnSuccessListener {
+                        for (data in it) {
+                            val r = data.toObject(inv_itemsItem::class.java)
+                            if (r.ItemName == "Butter") {
+                                val inv_id = r.InventoryId
+                                fs.collection("Users").get().addOnSuccessListener { it ->
+                                    for (data in it) {
+                                        Log.d(
+                                            "D_CHECK",
+                                            "s_getinventory:  ${data.id} ${r.InventoryId}"
+                                        )
+                                        fs.collection("Inventory").document(data.id)
+                                            .collection("MyInventory").document(inv_id!!)
+                                            .get()
+                                            .addOnSuccessListener { it ->
+//                                                val inventoryItemList = ArrayList<InventoryItems>()
+                                                Log.d("DUB", "search: ${it} ")
+                                                val r = it.toObject(InventoryItems::class.java)
+                                                r?.InventoryID = it.id
+                                                r?.let {
+                                                    inventoryItems.add(it)
+                                                }
+                                                updateUi(inventoryItems)
+
+//                                                val a =
+//                                                    inventoryItems.filter { it.InventoryName == name }
+//                                                updateUi(java.util.ArrayList(a))
+                                                Log.d(
+                                                    "D_CHECK",
+                                                    "____getInventory: $inventoryItems"
+                                                )
+                                            }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+            }
+        }
+
+
+    }
 
     private fun checkUser() {
         fs.collection("Users").document(auth.currentUser?.uid!!).get().addOnSuccessListener {

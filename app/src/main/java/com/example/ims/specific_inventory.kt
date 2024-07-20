@@ -1171,9 +1171,9 @@ class specific_inventory : Fragment() {
                     .whereEqualTo("InventoryId", inventory_id).get().addOnSuccessListener {
                         Log.d("D_CHECK", "s_getdata: $it")
                         if (it.isEmpty) {
-                            binding.rvInvProduct.visibility = View.GONE
-                            binding.noData.visibility = View.VISIBLE
-                            binding.animationView.playAnimation()
+                            binding.rvInvProduct.visibility = View.VISIBLE
+                            binding.noData.visibility = View.GONE // DEBUG
+//                            binding.animationView.playAnimation()
                         } else {
                             binding.rvInvProduct.visibility = View.VISIBLE
                             binding.noData.visibility = View.GONE

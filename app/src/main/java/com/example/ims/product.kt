@@ -475,7 +475,6 @@ class product : Fragment() {
                 Log.d("D_CHECK", "s_getinventory: ${data.id}")
                 fs.collection("Product").document(data.id).collection("MyProduct")
                     .orderBy("CreatedAt", Query.Direction.DESCENDING).get().addOnSuccessListener {
-
                         for (data in it) {
                             val r = data.toObject(inv_itemsItem::class.java)
                             productList.add(r)
