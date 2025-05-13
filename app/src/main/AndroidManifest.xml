@@ -56,7 +56,7 @@
             android:resource="@color/blue3" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAb3_bVoy_Fjs2uLQTc27PUCCZBFznN7Gg" />
+            android:value="" /> <!--Add your api key-->
 
         <activity
             android:name=".SigninAct"
